@@ -32,18 +32,16 @@
 	</Properties>-->
 
 	<Files>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public class ${ClassName}
-	{
-		public ${ClassName}()
-		{
+namespace ${StandardNamespace} {
+	public class ${ClassName} {
+		public ${ClassName}() {
+			
 		}
 	}
 }

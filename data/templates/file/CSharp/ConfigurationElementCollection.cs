@@ -2,21 +2,17 @@ ${StandardHeader.C#}
 using System;
 using System.Configuration;
 
-
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	/// <summary>
 	/// A collection of ${ClassName}Element(s).
 	/// </summary>
-	public sealed class ${ClassName}Collection : ConfigurationElementCollection
-	{
+	public sealed class ${ClassName}Collection : ConfigurationElementCollection {
 		#region Properties
 
 		/// <summary>
 		/// Gets the CollectionType of the ConfigurationElementCollection.
 		/// </summary>
-		public override ConfigurationElementCollectionType CollectionType
-		{
+		public override ConfigurationElementCollectionType CollectionType {
 			get { return ConfigurationElementCollectionType.BasicMap; }
 		}
 	   
@@ -24,8 +20,7 @@ namespace ${StandardNamespace}
 		/// <summary>
 		/// Gets the Name of Elements of the collection.
 		/// </summary>
-		protected override string ElementName
-		{
+		protected override string ElementName {
 		get { return "${ClassName}"; }
 		}
 			   
@@ -33,11 +28,9 @@ namespace ${StandardNamespace}
 		/// <summary>
 		/// Retrieve and item in the collection by index.
 		/// </summary>
-		public ${ClassName}Element this[int index]
-		{
-			get   { return (${ClassName}Element)BaseGet(index); }
-			set
-			{
+		public ${ClassName}Element this[int index] {
+			get { return (${ClassName}Element)BaseGet(index); }
+			set {
 				if (BaseGet(index) != null)
 				{
 					BaseRemoveAt(index);
@@ -53,8 +46,7 @@ namespace ${StandardNamespace}
 		/// Adds a ${ClassName}Element to the configuration file.
 		/// </summary>
 		/// <param name="element">The ${ClassName}Element to add.</param>
-		public void Add(${ClassName}Element element)
-		{
+		public void Add(${ClassName}Element element) {
 			BaseAdd(element);
 		}
 	   
@@ -63,8 +55,7 @@ namespace ${StandardNamespace}
 		/// Creates a new ${ClassName}Element.
 		/// </summary>
 		/// <returns>A new <c>${ClassName}Element</c></returns>
-		protected override ConfigurationElement CreateNewElement()
-		{
+		protected override ConfigurationElement CreateNewElement() {
 			return new ${ClassName}Element();
 		}
 
@@ -75,8 +66,7 @@ namespace ${StandardNamespace}
 		/// </summary>
 		/// <param name="element">Element to get the key of.</param>
 		/// <returns>The key of <c>element</c>.</returns>
-		protected override object GetElementKey(ConfigurationElement element)
-		{
+		protected override object GetElementKey(ConfigurationElement element) {
 			return ((${ClassName}Element)element).Name;
 		}
 	   
@@ -88,7 +78,6 @@ namespace ${StandardNamespace}
 		public void Remove (string name) {
 			base.BaseRemove(name);
 		}
-
 	}
 }
 

@@ -21,16 +21,14 @@
 		${ClassName}                -> Class name (generally FileNameWithoutExtension w/o 'bad' characters)
 	 -->
 	<Files>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public interface ${ClassName}
-	{
+namespace ${StandardNamespace} {
+	public interface ${ClassName} {
 		
 	}
 }

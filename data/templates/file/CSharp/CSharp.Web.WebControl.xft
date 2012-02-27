@@ -21,60 +21,53 @@
 		${Path}                     -> Full path of the file
 	 -->
 	<Files>
-		<File name="${Path}/${FileNameWithoutExtension}.cs" DependentUpon="${FileName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${Path}/${FileNameWithoutExtension}.cs" DependentUpon="${FileName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Web;
 using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}
-	/// </summary>
-	public class ${ClassName} : Control
-	{	
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+namespace ${StandardNamespace} {
+	public class ${ClassName} : Control {
 		#region Data
 		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		#region Constructor
 
-		public ${ClassName}()
-		{
+		public ${ClassName}() {
 			Init += new EventHandler( OnInit );
 			Load += new EventHandler( OnLoad );
 		}
 		
 		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		#region OnInit
 		
-		private void OnInit(object sender, EventArgs e)
-		{
+		private void OnInit(object sender, EventArgs e) {
+			
 		}
 		
 		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		#region OnLoad
 		
-		private void OnLoad(object sender, EventArgs e)
-		{
+		private void OnLoad(object sender, EventArgs e) {
+			
 		}
 		
 		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		#region Properties
+
 		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		#region Render
 
-		protected override void Render(HtmlTextWriter Writer)
-		{	
+		protected override void Render(HtmlTextWriter Writer) {
 			Writer.Write( "${ClassName} Control" );
 		}
+
 		#endregion
 	}
 }

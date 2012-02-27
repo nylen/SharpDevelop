@@ -29,8 +29,7 @@
 		
 	</Grid>
 </Page>]]></File>
-		<File name="${FullName}.cs" language="C#" DependentUpon="${FileName}" SubType="Code"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}.cs" language="C#" DependentUpon="${FileName}" SubType="Code"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -40,15 +39,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Interaction logic for ${FileName}
-	/// </summary>
-	public partial class ${ClassName} : Page
-	{
-		public ${ClassName}()
-		{
+namespace ${StandardNamespace} {
+	public partial class ${ClassName} : Page {
+		public ${ClassName}() {
 			InitializeComponent();
 		}
 	}

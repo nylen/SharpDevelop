@@ -51,32 +51,25 @@
 	</References>
 	
 	<Files>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-<% if (ConditionalClass) { %>#if TEST
-<% } %>
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}<% if (ConditionalClass) { %>#if TEST
+<% } %>using System;
 using NUnit.Framework;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	[TestFixture]
-	public class ${ClassName}
-	{
+	public class ${ClassName} {
 		[Test]
-		public void TestMethod()
-		{
+		public void TestMethod() {
 			// TODO: Add your test.
 		}<% if (AddSetupCode) { %>
 		
 		[TestFixtureSetUp]
-		public void Init()
-		{
+		public void Init() {
 			// TODO: Add Init code.
 		}<% } if (AddTearDownCode) { %>
 		
 		[TestFixtureTearDown]
-		public void Dispose()
-		{
+		public void Dispose() {
 			// TODO: Add tear down code.
 		}<% } %>
 	}
