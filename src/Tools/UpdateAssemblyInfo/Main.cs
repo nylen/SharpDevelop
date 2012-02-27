@@ -32,11 +32,11 @@ namespace UpdateAssemblyInfo
 				Output = "Main/GlobalAssemblyInfo.cs"
 			},
 			new TemplateFile {
-				Input = "Main/StartUp/Project/app.template.config",
-				Output = "Main/StartUp/Project/SharpDevelop.exe.config"
+				Input = "Main/Start_Up/Project/app.template.config",
+				Output = "Main/Start_Up/Project/SharpDevelop.exe.config"
 			},
 			new TemplateFile {
-				Input = "Main/StartUp/Project/app.template.config",
+				Input = "Main/Start_Up/Project/app.template.config",
 				Output = "Main/ICSharpCode.SharpDevelop.Sda/ICSharpCode.SharpDevelop.Sda.dll.config"
 			},
 			new TemplateFile {

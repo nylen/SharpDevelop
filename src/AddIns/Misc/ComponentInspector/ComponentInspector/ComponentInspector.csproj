@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Configuration\AssemblyInfo.cs" />
     <Compile Include="Src\ComponentInspectorApplication.cs" />
-    <EmbeddedResource Include="..\..\..\..\Main\StartUp\Project\Resources\StringResources.resources">
+    <EmbeddedResource Include="..\..\..\..\Main\Start_Up\Project\Resources\StringResources.resources">
       <Link>Resources\StringResources.resources</Link>
     </EmbeddedResource>
   </ItemGroup>

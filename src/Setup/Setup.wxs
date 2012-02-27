@@ -124,7 +124,7 @@
 		
 		<!-- Puts SharpDevelop icon in Control Panel's Add/Remove Programs -->
 		<Property Id="ARPPRODUCTICON">SharpDevelopIcon.exe</Property>
-		<Icon Id="SharpDevelopIcon.exe" SourceFile="..\Main\StartUp\Project\Resources\SharpDevelop.ico"/>
+		<Icon Id="SharpDevelopIcon.exe" SourceFile="..\Main\Start_Up\Project\Resources\SharpDevelop.ico"/>
 		
 		<!--
 			Source media for the installation. 

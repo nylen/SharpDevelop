@@ -122,7 +122,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{5A3EBEBA-0
 	ProjectSection(SolutionItems) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartUp", "Main\StartUp\Project\StartUp.csproj", "{1152B71B-3C05-4598-B20D-823B5D40559E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Start_Up", "Main\Start_Up\Project\Start_Up.csproj", "{1152B71B-3C05-4598-B20D-823B5D40559E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.Core", "Main\Core\Project\ICSharpCode.Core.csproj", "{35CEF10F-2D4C-45F2-9DD1-161E0FEC583C}"
 EndProject

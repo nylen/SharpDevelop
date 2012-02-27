@@ -42,7 +42,7 @@ namespace StringResourceToolAddIn
 			                                "../../../..");
 			
 			using (ResourceReader r = new ResourceReader(Path.Combine(sdSrcPath,
-			                                                          "Main/StartUp/Project/Resources/StringResources.resources"))) {
+			                                                          "Main/Start_Up/Project/Resources/StringResources.resources"))) {
 				IDictionaryEnumerator en = r.GetEnumerator();
 				// Goes through the enumerator, printing out the key and value pairs.
 				while (en.MoveNext()) {

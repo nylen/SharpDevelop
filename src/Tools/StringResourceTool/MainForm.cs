@@ -331,7 +331,7 @@ namespace StringResourceTool
 		const string dataBaseDir = srcDir + @"..\..\SharpDevelopResources\LanguageResources\";
 		Hashtable FindResourceStrings()
 		{
-			ResourceSet rs = new ResourceSet(srcDir + @"Main\StartUp\Project\Resources\StringResources.resources");
+			ResourceSet rs = new ResourceSet(srcDir + @"Main\Start_Up\Project\Resources\StringResources.resources");
 			Hashtable t = new Hashtable();
 			foreach (DictionaryEntry e in rs) {
 				t.Add(e.Key, null);

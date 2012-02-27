@@ -11,6 +11,6 @@ bin/
 /src/AddIns/Misc/Profiler/Hook/x64/
 /src/Main/GlobalAssemblyInfo.cs
 /src/Main/ICSharpCode.SharpDevelop.Sda/ICSharpCode.SharpDevelop.Sda.dll.config
-/src/Main/StartUp/Project/SharpDevelop.exe.config
+/src/Main/Start_Up/Project/SharpDevelop.exe.config
 /src/Setup/SharpDevelop.Setup.wixproj.user
 /src/SharpDevelop.sln.cache
