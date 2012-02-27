@@ -14,3 +14,4 @@ bin/
 /src/Main/Start_Up/Project/SharpDevelop.exe.config
 /src/Setup/SharpDevelop.Setup.wixproj.user
 /src/SharpDevelop.sln.cache
+*.user
