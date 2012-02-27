@@ -33,6 +33,15 @@ namespace ICSharpCode.SharpDevelop.Dom.Refactoring
 			pOpt.PropertyGetBraceStyle = braceStyle;
 			pOpt.PropertySetBraceStyle = braceStyle;
 			
+			pOpt.ClassBraceStyle = braceStyle;
+			pOpt.ConstructorBraceStyle = braceStyle;
+			pOpt.DestructorBraceStyle = braceStyle;
+			pOpt.EnumBraceStyle = braceStyle;
+			pOpt.InterfaceBraceStyle = braceStyle;
+			pOpt.MethodBraceStyle = braceStyle;
+			pOpt.NamespaceBraceStyle = braceStyle;
+			pOpt.StructBraceStyle = braceStyle;
+			
 			pOpt.IndentationChar = this.Options.IndentString[0];
 			pOpt.IndentSize = this.Options.IndentString.Length;
 			pOpt.TabSize = this.Options.IndentString.Length;
