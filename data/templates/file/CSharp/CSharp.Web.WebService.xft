@@ -21,30 +21,19 @@
 		${Path}                     -> Full path of the file
 	 -->
 	<Files>
-		<File name="${Path}/${FileNameWithoutExtension}.cs" DependentUpon="${FileName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${Path}/${FileNameWithoutExtension}.cs" DependentUpon="${FileName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Web.Services;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}
-	/// </summary>
-	[WebService
- 	 (	Name = "${ClassName}",
-  		Description = "${ClassName}",
-  		Namespace = "http://www.${ClassName}.example"
- 	 )
-	]
-	public class ${ClassName} : WebService
-	{
-		public ${ClassName}()
-		{
+namespace ${StandardNamespace} {
+	[WebService(Name = "${ClassName}",
+		Description = "${ClassName}",
+		Namespace = "http://www.${ClassName}.example")]
+	public class ${ClassName} : WebService {
+		public ${ClassName}() {
 		}
 		
 		[WebMethod]
-		public string Status()
-		{
+		public string Status() {
 			string s = string.Format("Time: {0}", DateTime.Now);
 			return s;
 		}

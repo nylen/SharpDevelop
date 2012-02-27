@@ -2,20 +2,17 @@ ${StandardHeader.C#}
 using System;   
 using System.Configuration;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	/// <summary>
 	/// Represents a single XML tag inside a ConfigurationSection
 	/// or a ConfigurationElementCollection.
 	/// </summary>
-	public sealed class ${ClassName}Element : ConfigurationElement
-	{
+	public sealed class ${ClassName}Element : ConfigurationElement {
 		/// <summary>
 		/// The attribute <c>name</c> of a <c>${ClassName}Element</c>.
 		/// </summary>
 		[ConfigurationProperty("name", IsKey = true, IsRequired = true)]
-		public string Name
-		{
+		public string Name {
 			get { return (string)this["name"]; }
 			set { this["name"] = value; }
 		}
@@ -30,6 +27,5 @@ namespace ${StandardNamespace}
 			set { this["special"] = value; }
 		}
 	}
-	
 }
 

@@ -2,8 +2,7 @@ ${StandardHeader.C#}
 using System;   
 using System.Configuration;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	/// <summary>
 	/// Configuration section &lt;${ClassName}&gt;
 	/// </summary>
@@ -11,8 +10,7 @@ namespace ${StandardNamespace}
 	/// Assign properties to your child class that has the attribute 
 	/// <c>[ConfigurationProperty]</c> to store said properties in the xml.
 	/// </remarks>
-	public sealed class ${ClassName}Settings : ConfigurationSection
-	{
+	public sealed class ${ClassName}Settings : ConfigurationSection {
 		System.Configuration.Configuration _Config;
 
 
@@ -46,7 +44,7 @@ namespace ${StandardNamespace}
 		/// <summary>
 		/// Private Constructor used by our factory method.
 		/// </summary>
-		private ${ClassName}Settings () : base () {
+		private ${ClassName}Settings() : base () {
 			// Allow this section to be stored in user.app. By default this is forbidden.
 			this.SectionInformation.AllowExeDefinition =
 				ConfigurationAllowExeDefinition.MachineToLocalUser;

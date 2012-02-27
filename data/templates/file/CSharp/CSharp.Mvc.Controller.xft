@@ -12,20 +12,12 @@
 	<Description>MVC Controller</Description>
 	
 	<Files>
-		<File name="${FullName}" language="C#">
-<![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Web.Mvc;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public class ${ClassName} : Controller
-	{
-		public ActionResult Index()
-		{
+namespace ${StandardNamespace} {
+	public class ${ClassName} : Controller {
+		public ActionResult Index() {
 			return View();
 		}
 	}

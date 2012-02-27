@@ -29,10 +29,9 @@
 	<Files>
 		<!-- Designer file must come first, so the design tab is shown correctly -->
 <File name="${Path}/${FileNameWithoutExtension}.Designer.cs" DependentUpon="${FileName}" language="C#"><![CDATA[${StandardHeader.C#}
-namespace ${StandardNamespace}
-{
-	partial class ${ClassName}
-	{
+
+namespace ${StandardNamespace} {
+	partial class ${ClassName} {
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
 		/// </summary>
@@ -42,8 +41,7 @@ namespace ${StandardNamespace}
 		/// Disposes resources used by the control.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
+		protected override void Dispose(bool disposing) {
 			if (disposing) {
 				if (components != null) {
 					components.Dispose();
@@ -57,8 +55,7 @@ namespace ${StandardNamespace}
 		/// Do not change the method contents inside the source code editor. The Forms designer might
 		/// not be able to load this method if it was changed manually.
 		/// </summary>
-		private void InitializeComponent()
-		{
+		private void InitializeComponent() {
 			// 
 			// ${ClassName}
 			// 
@@ -68,21 +65,18 @@ namespace ${StandardNamespace}
 	}
 }
 ]]></File>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public partial class ${ClassName} : UserControl
-	{
-		public ${ClassName}()
-		{
+namespace ${StandardNamespace} {
+	public partial class ${ClassName} : UserControl {
+		public ${ClassName}() {
 			//
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//

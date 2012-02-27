@@ -21,33 +21,19 @@
 	 -->
 	
 	<Files>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Runtime.Serialization;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Desctiption of ${ClassName}.
-	/// </summary>
-	public class ${ClassName} : Exception, ISerializable
-	{
-		public ${ClassName}()
-		{
-		}
+namespace ${StandardNamespace} {
+	public class ${ClassName} : Exception, ISerializable {
+		public ${ClassName}() { }
 
-	 	public ${ClassName}(string message) : base(message)
-		{
-		}
+	 	public ${ClassName}(string message) : base(message) { }
 
-		public ${ClassName}(string message, Exception innerException) : base(message, innerException)
-		{
-		}
+		public ${ClassName}(string message, Exception innerException) : base(message, innerException) { }
 
 		// This constructor is needed for serialization.
-		protected ${ClassName}(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-		}
+		protected ${ClassName}(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
 }]]></File>
 	</Files>

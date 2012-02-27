@@ -21,16 +21,10 @@
 		${Path}                     -> Full path of the file
 	 -->
 	<Files>
-		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}" language="C#"><![CDATA[${StandardHeader.C#}using System;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public sealed class ${ClassName}
-	{
+namespace ${StandardNamespace} {
+	public sealed class ${ClassName} {
 		private static ${ClassName} instance = new ${ClassName}();
 		
 		public static ${ClassName} Instance {
@@ -39,8 +33,7 @@ namespace ${StandardNamespace}
 			}
 		}
 		
-		private ${ClassName}()
-		{
+		private ${ClassName}() {
 		}
 	}
 }

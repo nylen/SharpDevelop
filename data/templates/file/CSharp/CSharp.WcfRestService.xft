@@ -21,32 +21,22 @@
 <%@ServiceHost language="C#" Debug="true" Service="${StandardNamespace}.${ClassName}"%>
 ]]>
 		</File>
-		<File name="${FullName}.cs" language="C#" DependentUpon="${FullName}">
-<![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}.cs" language="C#" DependentUpon="${FullName}"><![CDATA[${StandardHeader.C#}using System;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	[ServiceContract]
-	public interface I${ClassName}
-	{
+	public interface I${ClassName} {
 		[OperationContract]
 		[WebGet(UriTemplate = "operation/{name}")]
-	    string MyOperation(string name);
+		string MyOperation(string name);
 	}
 
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public class ${ClassName} : I${ClassName}
-	{
-		public string MyOperation(string name)
-	    {
-		  // implement the operation
-		  return string.Format("Operation name: {0}", name);
-	    }
+	public class ${ClassName} : I${ClassName} {
+		public string MyOperation(string name) {
+			return string.Format("Operation name: {0}", name);
+		}
 	}
 }
 ]]>

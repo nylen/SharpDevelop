@@ -21,27 +21,18 @@
 <%@ServiceHost language="C#" Debug="true" Service="${StandardNamespace}.${ClassName}"%>
 ]]>
 		</File>
-		<File name="${FullName}.cs" language="C#" DependentUpon="${FullName}">
-<![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${FullName}.cs" language="C#" DependentUpon="${FullName}"><![CDATA[${StandardHeader.C#}using System;
 using System.ServiceModel;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	[ServiceContract]
-	public interface I${ClassName}
-	{
+	public interface I${ClassName} {
 		[OperationContract]
 		void MyOperation();
 	}
 
-	/// <summary>
-	/// Description of ${ClassName}.
-	/// </summary>
-	public class ${ClassName} : I${ClassName}
-	{
-		public void MyOperation()
-		{
+	public class ${ClassName} : I${ClassName} {
+		public void MyOperation() {
 			// implement the operation
 		}
 	}
