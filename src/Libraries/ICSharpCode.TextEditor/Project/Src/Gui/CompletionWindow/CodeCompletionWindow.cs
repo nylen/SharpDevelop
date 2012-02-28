@@ -327,7 +327,7 @@ namespace ICSharpCode.TextEditor.Gui.CompletionWindow
 		{
 			int height = codeCompletionListView.ItemHeight * Math.Min(MaxListLength, completionData.Length);
 			int width = codeCompletionListView.ItemHeight * 10;
-			if (!fixedListViewWidth) {
+			if (true || !fixedListViewWidth) {
 				width = GetListViewWidth(width, height);
 			}
 			return new Size(width, height);
