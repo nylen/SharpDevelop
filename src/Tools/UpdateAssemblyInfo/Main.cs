@@ -23,6 +23,10 @@ namespace UpdateAssemblyInfo
 		const int BaseCommitRev = 7999;
 		
 		const string globalAssemblyInfoTemplateFile = "src/Main/GlobalAssemblyInfo.template";
+		
+		static StringBuilder log = new StringBuilder();
+		static string exeDir = Path.GetDirectoryName(typeof(MainClass).Assembly.Location);
+		
 		static readonly TemplateFile[] templateFiles = {
 			new TemplateFile {
 				Input = globalAssemblyInfoTemplateFile,
@@ -54,7 +58,10 @@ namespace UpdateAssemblyInfo
 		public static int Main(string[] args)
 		{
 			try {
-				string exeDir = Path.GetDirectoryName(typeof(MainClass).Assembly.Location);
+				foreach (string arg in args) {
+					appendLogLine("arg: '{0}'", arg);
+				}
+
 				bool createdNew;
 				using (Mutex mutex = new Mutex(true, "SharpDevelopUpdateAssemblyInfo" + exeDir.GetHashCode(), out createdNew)) {
 					if (!createdNew) {
@@ -66,14 +73,17 @@ namespace UpdateAssemblyInfo
 						}
 						return 0;
 					}
+					appendLogLine("working dir: '{0}'", Directory.GetCurrentDirectory());
 					if (!File.Exists("SharpDevelop.sln")) {
 						string mainDir = Path.GetFullPath(Path.Combine(exeDir, "../../../../.."));
 						if (File.Exists(mainDir + "\\SharpDevelop.sln")) {
 							Directory.SetCurrentDirectory(mainDir);
+							appendLogLine("working dir: '{0}'", Directory.GetCurrentDirectory());
 						}
 					}
 					if (!File.Exists("SharpDevelop.sln")) {
-						Console.WriteLine("Working directory must be SharpDevelop!");
+						appendLogLine("Working directory must be SharpDevelop!");
+						writeLog(2);
 						return 2;
 					}
 					RetrieveRevisionNumber();
@@ -96,7 +106,9 @@ namespace UpdateAssemblyInfo
 					return 0;
 				}
 			} catch (Exception ex) {
-				Console.WriteLine(ex);
+				appendLogLine(ex.Message);
+				appendLogLine(ex.StackTrace);
+				writeLog(3);
 				return 3;
 			}
 		}
@@ -222,21 +234,32 @@ namespace UpdateAssemblyInfo
 		
 		static void ReadRevisionNumberFromGit()
 		{
+			appendLogLine("base commit: " + BaseCommit);
 			ProcessStartInfo info = new ProcessStartInfo("cmd", "/c git rev-list " + BaseCommit + "..HEAD");
 			string path = Environment.GetEnvironmentVariable("PATH");
 			path += ";" + Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "git\\bin");
-			info.EnvironmentVariables["PATH"] =  path;
+
+			foreach (string p in path.Split(';')) {
+				appendLogLine("PATH: " + p);
+			}
+
+			info.EnvironmentVariables["PATH"] = path;
 			info.RedirectStandardOutput = true;
+			info.RedirectStandardError = true;
 			info.UseShellExecute = false;
 			using (Process p = Process.Start(info)) {
 				string line;
 				int revNum = BaseCommitRev;
 				while ((line = p.StandardOutput.ReadLine()) != null) {
+					appendLogLine("git rev-list: " + line);
 					if (gitCommitHash == null) {
 						// first entry is HEAD
 						gitCommitHash = line;
 					}
 					revNum++;
+				}
+				while ((line = p.StandardError.ReadLine()) != null) {
+					appendLogLine("git rev-list STDERR: " + line);
 				}
 				p.WaitForExit();
 				if (p.ExitCode != 0)
@@ -292,5 +315,20 @@ namespace UpdateAssemblyInfo
 			}
 		}
 		#endregion
+
+		static void writeLog(int exitCode) {
+			using (StreamWriter w = new StreamWriter(Path.Combine(exeDir,
+				String.Format("UpdateAssemblyInfo-{0}.txt",
+					DateTime.Now.ToString("yyyy.MM.dd.HH.mm.ss.fff"))))) {
+
+				log.AppendLine("exiting with code " + exitCode);
+				Console.Write(log);
+				w.Write(log);
+			}
+		}
+
+		static void appendLogLine(string format, params object[] args) {
+			log.AppendLine(String.Format(format, args));
+		}
 	}
 }
