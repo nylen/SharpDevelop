@@ -65,30 +65,22 @@
 	</Path>
 </AddIn>
 ]]></File>
-		<File name="${ProjectName}Tool.cs">
-			<![CDATA[${StandardHeader.C#}
-using System;
+		<File name="${ProjectName}Tool.cs"><![CDATA[${StandardHeader.C#}using System;
 using System.IO;
 using System.CodeDom;
 using System.Xml;
 using ICSharpCode.EasyCodeDom; // defined in ICSharpCode.SharpDevelop.Dom.dll
 using ICSharpCode.SharpDevelop.Project; // defined in ICSharpCode.SharpDevelop.dll
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of CustomTool.
-	/// </summary>
-	public class ${ProjectName}Tool : ICustomTool
-	{
+namespace ${StandardNamespace} {
+	public class ${ProjectName}Tool : ICustomTool {
 		/// <summary>
 		/// Called by SharpDevelop when your tool has to generate code.
 		/// </summary>
 		/// <param name="item">
 		/// The file for which your tool should generate code.
 		/// </param>
-		public void GenerateCode(FileProjectItem item, CustomToolContext context)
-		{
+		public void GenerateCode(FileProjectItem item, CustomToolContext context) {
 			// make SharpDevelop generate a name for the output file
 			string outputFileName = context.GetOutputFileName(item, ".Generated");
 			// if item.FileName is "C:\somedir\SomeName.xml" and is inside a C# project,
@@ -113,8 +105,7 @@ namespace ${StandardNamespace}
 			// part of it.
 		}
 		
-		CodeCompileUnit GenerateCode(XmlDocument doc, string targetNamespace, string className)
-		{
+		CodeCompileUnit GenerateCode(XmlDocument doc, string targetNamespace, string className) {
 			// This method does the actual code generation.
 			
 			// This sample accepts an object graph as XmlDocument and outputs a class with a static method
@@ -141,8 +132,7 @@ namespace ${StandardNamespace}
 			return ccu;
 		}
 		
-		string GenerateCodeForObject(EasyBlock block, XmlElement objectElement, ref int helperVariableCounter)
-		{
+		string GenerateCodeForObject(EasyBlock block, XmlElement objectElement, ref int helperVariableCounter) {
 			// generate code to create the object represented by "objectElement" and add it to the block
 			
 			// generate "VarType v#;"

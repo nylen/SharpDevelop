@@ -56,13 +56,9 @@ using System.Data;
 using System.Xml;
 using System.Configuration;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// </summary>
-	public partial class App : Application
-	{
+namespace ${StandardNamespace} {
+	public partial class App : Application {
+		
 	}
 }]]></File>
 			<File name="Window1.xaml" buildAction="Page" language="XML"><![CDATA[<Window x:Class="${StandardNamespace}.Window1"
@@ -74,8 +70,7 @@ namespace ${StandardNamespace}
 		
 	</Grid>
 </Window>]]></File>
-			<File name="Window1.xaml.cs" SubType="Code" DependentUpon="Window1.xaml"><![CDATA[${StandardHeader.C#}
-using System;
+			<File name="Window1.xaml.cs" SubType="Code" DependentUpon="Window1.xaml"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -85,15 +80,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Interaction logic for Window1.xaml
-	/// </summary>
-	public partial class Window1 : Window
-	{
-		public Window1()
-		{
+namespace ${StandardNamespace} {
+	public partial class Window1 : Window {
+		public Window1() {
 			InitializeComponent();
 		}
 	}

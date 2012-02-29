@@ -36,18 +36,15 @@
 		</PropertyGroup>
 
 	<Files>
-		<File name="Soap.cs" DependentUpon="Default.asmx"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name="Soap.cs" DependentUpon="Default.asmx"><![CDATA[${StandardHeader.C#}using System;
 using System.Data;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	[WebService]
-	public class Soap : System.Web.Services.WebService
-	{
+	public class Soap : System.Web.Services.WebService {
 		/// <summary>
 		/// Logs into the web service
 		/// </summary>
@@ -55,8 +52,7 @@ namespace ${StandardNamespace}
 		/// <param name="password">User's password</param>
 		/// <returns>True on successful login.</returns>
 		[WebMethod(EnableSession=true)]
-		public bool Login(string userName, string password)
-		{
+		public bool Login(string userName, string password) {
 			//NOTE: There are better ways of doing authentication. This is just illustrates Session usage.
 			UserName = userName;
 			return true;
@@ -66,8 +62,7 @@ namespace ${StandardNamespace}
 		/// Logs out of the Session.
 		/// </summary>
 		[WebMethod(EnableSession=true)]
-		public void Logout()
-		{    
+		public void Logout() {
 			Context.Session.Abandon();
 		}
 		
@@ -75,8 +70,8 @@ namespace ${StandardNamespace}
 		/// UserName of the logged in user.
 		/// </summary>
 		private string UserName {
-			get {return (string)Context.Session["User"];}
-			set {Context.Session["User"] = value;}
+			get { return (string)Context.Session["User"]; }
+			set { Context.Session["User"] = value; }
 		}
 	}
 }

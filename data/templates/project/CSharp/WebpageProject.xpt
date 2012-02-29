@@ -36,8 +36,7 @@
 
 	<Files>
 <!--*************************************************************************-->
-		<File name=".\Default.aspx.cs" DependentUpon="Default.aspx"><![CDATA[${StandardHeader.C#}
-using System;
+		<File name=".\Default.aspx.cs" DependentUpon="Default.aspx"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
@@ -48,87 +47,47 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of MainForm.
-	/// </summary>
-	public class Default : Page
-	{	
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Data
-
+namespace ${StandardNamespace} {
+	public class Default : Page {	
 		protected	HtmlInputButton		_Button_Ok;
 		protected	HtmlInputText 		_Input_Name;
 
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Page Init & Exit (Open/Close DB connections here...)
-
-		protected void PageInit(object sender, EventArgs e)
-		{
-		}
-		//----------------------------------------------------------------------
-		protected void PageExit(object sender, EventArgs e)
-		{
+		protected void PageInit(object sender, EventArgs e) {
+			
 		}
 
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Page Load
-		private void Page_Load(object sender, EventArgs e)
-		{
+		protected void PageExit(object sender, EventArgs e) {
+			
+		}
+
+		private void Page_Load(object sender, EventArgs e) {
 			Response.Write(@"Hello #Develop<br>");
-			//------------------------------------------------------------------
-			if(IsPostBack)
-			{
+			if (IsPostBack) {
+				
 			}
-			//------------------------------------------------------------------
-		}
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Click_Button_OK
-
-		//----------------------------------------------------------------------
-		protected void Click_Button_Ok(object sender, EventArgs e)
-		{
-			Response.Write( _Button_Ok.Value + " was cklicked!<br>");
 		}
 
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Changed_Input_Name
-
-		//----------------------------------------------------------------------
-		protected void Changed_Input_Name(object sender, EventArgs e)
-		{
-			Response.Write( _Input_Name.Value + " has changed!<br>");
+		protected void Click_Button_Ok(object sender, EventArgs e) {
+			Response.Write(_Button_Ok.Value + " was cklicked!<br>");
 		}
 
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region More...
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region Initialize Component
+		protected void Changed_Input_Name(object sender, EventArgs e) {
+			Response.Write(_Input_Name.Value + " has changed!<br>");
+		}
 
-		protected override void OnInit(EventArgs e)
-		{
+		protected override void OnInit(EventArgs e) {
 			InitializeComponent();
 			base.OnInit(e);
 		}
-		//----------------------------------------------------------------------
-		private void InitializeComponent()
-		{
+
+		private void InitializeComponent() {
 			this.Load	+= new System.EventHandler(Page_Load);
-			this.Init   += new System.EventHandler(PageInit);
+			this.Init += new System.EventHandler(PageInit);
 			this.Unload += new System.EventHandler(PageExit);
 			
 			_Button_Ok.ServerClick	 += new EventHandler(Click_Button_Ok);
 			_Input_Name.ServerChange += new EventHandler(Changed_Input_Name);
 		}
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	}
 }]]></File>
 <!--*************************************************************************-->
@@ -140,74 +99,53 @@ namespace ${StandardNamespace}
 %>
 ]]></File>
 <!--*************************************************************************-->
-		<File name=".\Global.asax.cs" DependentUpon="Global.asax">
-			<![CDATA[
-using System;
+		<File name=".\Global.asax.cs" DependentUpon="Global.asax"><![CDATA[using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Web;
 using System.Web.SessionState;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Summary description for Global.
-	/// </summary>
-	public class Global : HttpApplication
-	{
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		#region global
+namespace ${StandardNamespace} {
+	public class Global : HttpApplication {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		//private System.ComponentModel.IContainer components = null;
+		private System.ComponentModel.IContainer components = null;
 
-		public Global()
-		{
+		public Global() {
 			InitializeComponent();
 		}
 
-		#endregion
-		//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-		protected void Application_Start(Object sender, EventArgs e)
-		{
-
+		protected void Application_Start(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Session_Start(Object sender, EventArgs e)
-		{
-
+		protected void Session_Start(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Application_BeginRequest(Object sender, EventArgs e)
-		{
-
+		protected void Application_BeginRequest(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Application_EndRequest(Object sender, EventArgs e)
-		{
-
+		protected void Application_EndRequest(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Application_AuthenticateRequest(Object sender, EventArgs e)
-		{
-
+		protected void Application_AuthenticateRequest(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Application_Error(Object sender, EventArgs e)
-		{
-
+		protected void Application_Error(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Session_End(Object sender, EventArgs e)
-		{
-
+		protected void Session_End(Object sender, EventArgs e) {
+			
 		}
 
-		protected void Application_End(Object sender, EventArgs e)
-		{
-
+		protected void Application_End(Object sender, EventArgs e) {
+			
 		}
 
 		#region Web Form Designer generated code
@@ -215,9 +153,8 @@ namespace ${StandardNamespace}
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent()
-		{
-
+		private void InitializeComponent() {
+			
 		}
 		#endregion
 	}

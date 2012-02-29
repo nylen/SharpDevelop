@@ -15,7 +15,7 @@
 	
 	<!-- Actions -->
 	<Actions>
-		<Open filename = "MainClass.cs"/>
+		<Open filename = "MainForm.cs"/>
 	</Actions>
 	
 	<!-- Template Content -->
@@ -36,38 +36,30 @@
 		</PropertyGroup>
 		
 		<Files>
-			<File name="MainClass.cs"><![CDATA[${StandardHeader.C#}
-using System;
+			<File name="MainForm.cs"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// This is the main class of my Direct3D application
-	/// </summary>
-	public class MainClass : Form
-	{
-		/// <summary>
-		/// The rendering device
-		/// </summary>
+namespace ${StandardNamespace} {
+	public class MainForm : Form {
 		Device device = null;
 		
-		public MainClass()
-		{
+		public MainForm() {
 			this.ClientSize = new System.Drawing.Size(640, 480);
 			this.Text = "Direct3D Project";
 		}
 		
-		public bool InitializeGraphics()
-		{
+		public bool InitializeGraphics() {
 			try {
-				// Now let's setup the Direct3D stuff
+				// Set up Direct3D
 				PresentParameters presentParams = new PresentParameters();
 				presentParams.Windowed   = true;
 				presentParams.SwapEffect = SwapEffect.Discard;
@@ -87,35 +79,27 @@ namespace ${StandardNamespace}
 			}
 		}
 		
-		protected virtual void InvalidateDeviceObjects(object sender, EventArgs e)
-		{
+		protected virtual void InvalidateDeviceObjects(object sender, EventArgs e) {
+			
 		}
 		
-		protected virtual void RestoreDeviceObjects(object sender, EventArgs e)
-		{
+		protected virtual void RestoreDeviceObjects(object sender, EventArgs e) {
+			
 		}
 		
-		protected virtual void DeleteDeviceObjects(object sender, EventArgs e)
-		{
+		protected virtual void DeleteDeviceObjects(object sender, EventArgs e) {
+			
 		}
 		
-		protected virtual void EnvironmentResizing(object sender, CancelEventArgs e)
-		{
+		protected virtual void EnvironmentResizing(object sender, CancelEventArgs e) {
+			
 		}
 		
-		/// <summary>
-		/// This method moves the scene
-		/// </summary>
-		protected virtual void FrameMove()
-		{
+		protected virtual void FrameMove() {
 			// TODO : Frame movement
 		}
 		
-		/// <summary>
-		/// This method renders the scene
-		/// </summary>
-		protected virtual void Render()
-		{
+		protected virtual void Render() {
 			if (device != null) {
 				device.Clear(ClearFlags.Target, Color.Blue, 1.0f, 0);
 				device.BeginScene();
@@ -127,11 +111,7 @@ namespace ${StandardNamespace}
 			}
 		}
 		
-		/// <summary>
-		/// Our mainloop
-		/// </summary>
-		public void Run()
-		{
+		public void Run() {
 			// While the form is still valid, render and process messages
 			while (Created) {
 				FrameMove();
@@ -140,31 +120,25 @@ namespace ${StandardNamespace}
 			}
 		}
 		
-		protected override void OnPaint(PaintEventArgs e)
-		{
+		protected override void OnPaint(PaintEventArgs e) {
 			this.Render();
 		}
 		
-		protected override void OnKeyPress(KeyPressEventArgs e)
-		{
+		protected override void OnKeyPress(KeyPressEventArgs e) {
 			base.OnKeyPress(e);
 			if ((int)e.KeyChar == (int)System.Windows.Forms.Keys.Escape) {
 				this.Close(); 
 			}
 		}
 		
-		/// <summary>
-		/// The main entry point for the application
-		/// </summary>
-		static void Main()
-		{
-			using (MainClass mainClass = new MainClass()) {
-				if (!mainClass.InitializeGraphics()) {
+		static void Main() {
+			using (MainForm mainForm = new MainForm()) {
+				if (!mainForm.InitializeGraphics()) {
 					MessageBox.Show("Error while initializing Direct3D");
 					return;
 				}
-				mainClass.Show();
-				mainClass.Run();
+				mainForm.Show();
+				mainForm.Run();
 			}
 		}
 	}

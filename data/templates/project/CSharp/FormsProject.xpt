@@ -37,23 +37,13 @@
 		</PropertyGroup>
 		
 		<Files>
-			<File name="Program.cs" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+			<File name="Program.cs" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Windows.Forms;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Class with program entry point.
-	/// </summary>
-	internal sealed class Program
-	{
-		/// <summary>
-		/// Program entry point.
-		/// </summary>
+namespace ${StandardNamespace} {
+	static class Program {
 		[STAThread]
-		private static void Main(string[] args)
-		{
+		private static void Main(string[] args) {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
@@ -62,21 +52,18 @@ namespace ${StandardNamespace}
 	}
 }
 ]]></File>
-			<File name="MainForm.cs" language="C#"><![CDATA[${StandardHeader.C#}
-using System;
+			<File name="MainForm.cs" language="C#"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
-namespace ${StandardNamespace}
-{
-	/// <summary>
-	/// Description of MainForm.
-	/// </summary>
-	public partial class MainForm : Form
-	{
-		public MainForm()
-		{
+namespace ${StandardNamespace} {
+	public partial class MainForm : Form {
+		public MainForm() {
 			//
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//
@@ -90,10 +77,8 @@ namespace ${StandardNamespace}
 }
 ]]></File>
 			<File name="MainForm.Designer.cs" DependentUpon="MainForm.cs" language="C#"><![CDATA[${StandardHeader.C#}
-namespace ${StandardNamespace}
-{
-	partial class MainForm
-	{
+namespace ${StandardNamespace} {
+	partial class MainForm {
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
 		/// </summary>
@@ -103,8 +88,7 @@ namespace ${StandardNamespace}
 		/// Disposes resources used by the form.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
+		protected override void Dispose(bool disposing) {
 			if (disposing) {
 				if (components != null) {
 					components.Dispose();
@@ -118,8 +102,7 @@ namespace ${StandardNamespace}
 		/// Do not change the method contents inside the source code editor. The Forms designer might
 		/// not be able to load this method if it was changed manually.
 		/// </summary>
-		private void InitializeComponent()
-		{
+		private void InitializeComponent() {
 			// 
 			// MainForm
 			// 

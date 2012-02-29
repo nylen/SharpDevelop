@@ -38,8 +38,7 @@
 		</PropertyGroup>
 
 		<Files>
-			<File name="${ProjectName}.cs"><![CDATA[${StandardHeader.C#}
-using System;
+			<File name="${ProjectName}.cs"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -47,93 +46,65 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Text;
 
-namespace ${StandardNamespace}
-{
-	public class ${ProjectName} : ServiceBase
-	{
-		public const string MyServiceName = "${ProjectName}";
+namespace ${StandardNamespace} {
+	public class ${ProjectName} : ServiceBase {
+		public static const string SERVICE_NAME = "${ProjectName}";
 		
-		public ${ProjectName}()
-		{
+		public ${ProjectName}() {
 			InitializeComponent();
 		}
 		
-		private void InitializeComponent()
-		{
-			this.ServiceName = MyServiceName;
+		private void InitializeComponent() {
+			this.ServiceName = SERVICE_NAME;
 		}
 		
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose(bool disposing)
-		{
+		protected override void Dispose(bool disposing) {
 			// TODO: Add cleanup code here (if required)
 			base.Dispose(disposing);
 		}
 		
-		/// <summary>
-		/// Start this service.
-		/// </summary>
-		protected override void OnStart(string[] args)
-		{
+		protected override void OnStart(string[] args) {
 			// TODO: Add start code here (if required) to start your service.
 		}
 		
-		/// <summary>
-		/// Stop this service.
-		/// </summary>
-		protected override void OnStop()
-		{
+		protected override void OnStop() {
 			// TODO: Add tear-down code here (if required) to stop your service.
 		}
 	}
 }
 ]]></File>
-				<File name="ProjectInstaller.cs"><![CDATA[${StandardHeader.C#}
-using System;
+				<File name="ProjectInstaller.cs"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
 
-namespace ${StandardNamespace}
-{
+namespace ${StandardNamespace} {
 	[RunInstaller(true)]
-	public class ProjectInstaller : Installer
-	{
+	public class ProjectInstaller : Installer {
 		private ServiceProcessInstaller serviceProcessInstaller;
 		private ServiceInstaller serviceInstaller;
 		
-		public ProjectInstaller()
-		{
+		public ProjectInstaller() {
 			serviceProcessInstaller = new ServiceProcessInstaller();
 			serviceInstaller = new ServiceInstaller();
 			// Here you can set properties on serviceProcessInstaller or register event handlers
 			serviceProcessInstaller.Account = ServiceAccount.LocalService;
 			
-			serviceInstaller.ServiceName = ${ProjectName}.MyServiceName;
+			serviceInstaller.ServiceName = ${ProjectName}.SERVICE_NAME;
 			this.Installers.AddRange(new Installer[] { serviceProcessInstaller, serviceInstaller });
 		}
 	}
 }
 ]]></File>
-				<File name="Program.cs"><![CDATA[${StandardHeader.C#}
-using System;
+				<File name="Program.cs"><![CDATA[${StandardHeader.C#}using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Text;
 
-namespace ${ProjectName}
-{
-	static class Program
-	{
-		/// <summary>
-		/// This method starts the service.
-		/// </summary>
-		static void Main()
-		{
-			// To run more than one service you have to add them here
+namespace ${ProjectName} {
+	static class Program {
+		static void Main() {
 			ServiceBase.Run(new ServiceBase[] { new ${ProjectName}() });
 		}
 	}
