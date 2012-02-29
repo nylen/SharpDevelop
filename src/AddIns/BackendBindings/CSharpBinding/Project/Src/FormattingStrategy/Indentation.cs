@@ -309,7 +309,7 @@ namespace CSharpBinding.FormattingStrategy
 						block.Indent(set,
 						             Repeat(set.IndentString, oldBlock.OneLineBlock) +
 						             (oldBlock.Continuation ? set.IndentString : "") +
-						             (i == line.Length - 1 ? set.IndentString : new String(' ', i + 1)));
+						             set.IndentString);
 						block.Bracket = c;
 						break;
 					case ')':
