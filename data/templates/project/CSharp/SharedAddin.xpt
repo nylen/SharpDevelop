@@ -37,13 +37,11 @@
 		</PropertyGroup>
 		
 		<Files>
-			<File name="Connect.cs"><![CDATA[${StandardHeader.C#}
-namespace ${StandardNamespace}
-{
-	using System;
-	using System.Runtime.InteropServices;
-	using Extensibility;
+			<File name="Connect.cs"><![CDATA[${StandardHeader.C#}using System;
+using System.Runtime.InteropServices;
+using Extensibility;
 
+namespace ${StandardNamespace} {
 
 	#region Creating an Add-in for Office ...
 
@@ -78,39 +76,36 @@ namespace ${StandardNamespace}
 	//				regasm ${StandardNamespace}.dll /u
 	//
 	//
-	//		The best way, doing these registration steps, is a Setup project.
+	//		The best way of doing these registration steps is a Setup project.
 
 	#endregion
 
-
 	[GuidAttribute("${GUID}"), ProgId("${StandardNamespace}.Connect")]
 	[ComVisible(true)]
-	public class Connect : Object, Extensibility.IDTExtensibility2
-	{
-		public Connect()
-		{
+	public class Connect : Object, Extensibility.IDTExtensibility2 {
+		public Connect() {
+			
 		}
 
-		public void OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref System.Array custom)
-		{
+		public void OnConnection(object application, ext_ConnectMode ConnectMode, object AddInInst, ref System.Array custom) {
 			applicationObject = application;
 			addinInstance = AddInInst;
 		}
 		
-		public void OnDisconnection(ext_DisconnectMode RemoveMode, ref System.Array custom)
-		{
+		public void OnDisconnection(ext_DisconnectMode RemoveMode, ref System.Array custom) {
+			
 		}
 		
-		public void OnAddInsUpdate(ref System.Array custom)
-		{
+		public void OnAddInsUpdate(ref System.Array custom) {
+			
 		}
 		
-		public void OnStartupComplete(ref System.Array custom)
-		{
+		public void OnStartupComplete(ref System.Array custom) {
+			
 		}
 		
-		public void OnBeginShutdown(ref System.Array custom)
-		{
+		public void OnBeginShutdown(ref System.Array custom) {
+			
 		}
 
 		private object applicationObject;
