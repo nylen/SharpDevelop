@@ -7,8 +7,8 @@
 
 using System;
 using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace ICSharpCode.PythonBinding
 {
@@ -57,7 +57,7 @@ namespace ICSharpCode.PythonBinding
 			IDocument document = textArea.Document;
 			LineSegment currentLine = document.GetLineSegment(line);
 			string indentation = GetIndentation(textArea, line - 1);
-			indentation = GetNewLineIndentation(indentation, Tab.GetIndentationString(document), increaseIndent);
+			indentation = GetNewLineIndentation(indentation, IndentHelper.GetIndentationString(document), increaseIndent);
 			string newIndentedText = indentation + document.GetText(currentLine);
 			SmartReplaceLine(document, currentLine, newIndentedText);
 			return indentation.Length;

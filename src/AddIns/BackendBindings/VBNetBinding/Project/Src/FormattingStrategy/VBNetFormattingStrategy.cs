@@ -20,8 +20,8 @@ using ICSharpCode.NRefactory.Parser.VB;
 using ICSharpCode.SharpDevelop;
 using ICSharpCode.SharpDevelop.Dom;
 using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace VBNetBinding.FormattingStrategy
 {
@@ -235,7 +235,7 @@ namespace VBNetBinding.FormattingStrategy
 									textArea.Document.Replace(curLine.Offset, curLine.Length, terminator + indentation + statement.EndStatement);
 								if (!IsInsideInterface(textArea, lineNr) || statement == interfaceStatement) {
 									for (int i = 0; i < statement.IndentPlus; i++) {
-										indentation += Tab.GetIndentationString(textArea.Document);
+										indentation += IndentHelper.GetIndentationString(textArea.Document);
 									}
 								}
 

@@ -14,8 +14,8 @@ using System.Xml;
 
 using ICSharpCode.Core;
 using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace ICSharpCode.SharpDevelop.DefaultEditor
 {
@@ -109,7 +109,7 @@ namespace ICSharpCode.SharpDevelop.DefaultEditor
 			string currentIndentation = "";
 			Stack tagStack = new Stack();
 			IDocument document = textArea.Document;
-			string tab = Tab.GetIndentationString(document);
+			string tab = IndentHelper.GetIndentationString(document);
 			int nextLine = begin; // in #dev coordinates
 			bool wasEmptyElement = false;
 			XmlNodeType lastType = XmlNodeType.XmlDeclaration;

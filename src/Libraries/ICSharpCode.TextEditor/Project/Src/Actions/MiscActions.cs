@@ -11,68 +11,12 @@ using System.Drawing;
 using System.Text;
 
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace ICSharpCode.TextEditor.Actions
 {
 	public class Tab : AbstractEditAction
 	{
-		public static string GetIndentationString(IDocument document)
-		{
-			return GetIndentationString(document, null);
-		}
-		
-		public static string GetIndentationString(IDocument document, TextArea textArea)
-		{
-			StringBuilder indent = new StringBuilder();
-			
-			if (document.TextEditorProperties.ConvertTabsToSpaces) {
-				int tabIndent = document.TextEditorProperties.IndentationSize;
-				if (textArea != null) {
-					int column = textArea.TextView.GetVisualColumn(textArea.Caret.Line, textArea.Caret.Column);
-					indent.Append(new String(' ', tabIndent - column % tabIndent));
-				} else {
-					indent.Append(new String(' ', tabIndent));
-				}
-			} else {
-				indent.Append('\t');
-			}
-			return indent.ToString();
-		}
-		
-		void InsertTabs(IDocument document, ISelection selection, int y1, int y2)
-		{
-			string indentationString = GetIndentationString(document);
-			for (int i = y2; i >= y1; --i) {
-				LineSegment line = document.GetLineSegment(i);
-				if (i == y2 && i == selection.EndPosition.Y && selection.EndPosition.X  == 0) {
-					continue;
-				}
-				
-				// this bit is optional - but useful if you are using block tabbing to sort out
-				// a source file with a mixture of tabs and spaces
-//				string newLine = document.GetText(line.Offset,line.Length);
-//				document.Replace(line.Offset,line.Length,newLine);
-				
-				document.Insert(line.Offset, indentationString);
-			}
-		}
-		
-		void InsertTabAtCaretPosition(TextArea textArea)
-		{
-			switch (textArea.Caret.CaretMode) {
-				case CaretMode.InsertMode:
-					textArea.InsertString(GetIndentationString(textArea.Document, textArea));
-					break;
-				case CaretMode.OverwriteMode:
-					string indentStr = GetIndentationString(textArea.Document, textArea);
-					textArea.ReplaceChar(indentStr[0]);
-					if (indentStr.Length > 1) {
-						textArea.InsertString(indentStr.Substring(1));
-					}
-					break;
-			}
-			textArea.SetDesiredColumn();
-		}
 		/// <remarks>
 		/// Executes this edit action
 		/// </remarks>
@@ -82,25 +26,38 @@ namespace ICSharpCode.TextEditor.Actions
 			if (textArea.SelectionManager.SelectionIsReadonly) {
 				return;
 			}
+			IndentHelper indentHelper = new IndentHelper(textArea.Document);
 			textArea.Document.UndoStack.StartUndoGroup();
+			
 			if (textArea.SelectionManager.HasSomethingSelected) {
 				foreach (ISelection selection in textArea.SelectionManager.SelectionCollection) {
 					int startLine = selection.StartPosition.Y;
 					int endLine   = selection.EndPosition.Y;
-					if (startLine != endLine) {
-						textArea.BeginUpdate();
-						InsertTabs(textArea.Document, selection, startLine, endLine);
-						textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.LinesBetween, startLine, endLine));
-						textArea.EndUpdate();
-					} else {
-						InsertTabAtCaretPosition(textArea);
-						break;
+					textArea.BeginUpdate();
+					for (int lineNum = startLine; lineNum <= endLine; lineNum++) {
+						IndentOperationInfo info = indentHelper.IndentLine(lineNum);
+						if (lineNum == textArea.Caret.Position.Line) {
+							textArea.Caret.Position = info.AdjustTextLocation(textArea.Caret.Position);
+						}
+						if (lineNum == startLine) {
+							selection.StartPosition = info.AdjustTextLocation(selection.StartPosition);
+						}
+						if (lineNum == endLine) {
+							selection.EndPosition = info.AdjustTextLocation(selection.EndPosition);
+						}
 					}
+					textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.LinesBetween, startLine, endLine));
+					textArea.EndUpdate();
 				}
 				textArea.Document.CommitUpdate();
 				textArea.AutoClearSelection = false;
 			} else {
-				InsertTabAtCaretPosition(textArea);
+				// Pressing Tab with nothing selected will indent the current line by one level.
+				int currentLine = textArea.Document.GetLineNumberForOffset(textArea.Caret.Offset);
+				IndentOperationInfo info = indentHelper.IndentLine(currentLine);
+				textArea.Caret.Position = info.AdjustTextLocation(textArea.Caret.Position);
+				textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.SingleLine, currentLine));
+				textArea.Document.CommitUpdate();
 			}
 			textArea.Document.UndoStack.EndUndoGroup();
 		}
@@ -108,103 +65,49 @@ namespace ICSharpCode.TextEditor.Actions
 	
 	public class ShiftTab : AbstractEditAction
 	{
-		void RemoveTabs(IDocument document, ISelection selection, int y1, int y2)
-		{
-			document.UndoStack.StartUndoGroup();
-			for (int i = y2; i >= y1; --i) {
-				LineSegment line = document.GetLineSegment(i);
-				if (i == y2 && line.Offset == selection.EndOffset) {
-					continue;
-				}
-				if (line.Length > 0) {
-					/**** TextPad Strategy:
-					/// first convert leading whitespace to tabs (controversial! - not all editors work like this)
-					string newLine = TextUtilities.LeadingWhiteSpaceToTabs(document.GetText(line.Offset,line.Length),document.Properties.Get("TabIndent", 4));
-					if(newLine.Length > 0 && newLine[0] == '\t') {
-						document.Replace(line.Offset,line.Length,newLine.Substring(1));
-						++redocounter;
-					}
-					else if(newLine.Length > 0 && newLine[0] == ' ') {
-						/// there were just some leading spaces but less than TabIndent of them
-						int leadingSpaces = 1;
-						for(leadingSpaces = 1; leadingSpaces < newLine.Length && newLine[leadingSpaces] == ' '; leadingSpaces++) {
-							/// deliberately empty
-						}
-						document.Replace(line.Offset,line.Length,newLine.Substring(leadingSpaces));
-						++redocounter;
-					}
-					/// else
-					/// there were no leading tabs or spaces on this line so do nothing
-					/// MS Visual Studio 6 strategy:
-					 ****/
-//					string temp = document.GetText(line.Offset,line.Length);
-					if (line.Length > 0) {
-						int charactersToRemove = 0;
-						if(document.GetCharAt(line.Offset) == '\t') { // first character is a tab - just remove it
-							charactersToRemove = 1;
-						} else if(document.GetCharAt(line.Offset) == ' ') {
-							int leadingSpaces = 1;
-							int tabIndent = document.TextEditorProperties.IndentationSize;
-							for (leadingSpaces = 1; leadingSpaces < line.Length && document.GetCharAt(line.Offset + leadingSpaces) == ' '; leadingSpaces++) {
-								// deliberately empty
-							}
-							if(leadingSpaces >= tabIndent) {
-								// just remove tabIndent
-								charactersToRemove = tabIndent;
-							}
-							else if(line.Length > leadingSpaces && document.GetCharAt(line.Offset + leadingSpaces) == '\t') {
-								// remove the leading spaces and the following tab as they add up
-								// to just one tab stop
-								charactersToRemove = leadingSpaces+1;
-							}
-							else {
-								// just remove the leading spaces
-								charactersToRemove = leadingSpaces;
-							}
-						}
-						if (charactersToRemove > 0) {
-							document.Remove(line.Offset,charactersToRemove);
-						}
-					}
-				}
-			}
-			document.UndoStack.EndUndoGroup();
-		}
-		
 		/// <remarks>
 		/// Executes this edit action
 		/// </remarks>
 		/// <param name="textArea">The <see cref="ItextArea"/> which is used for callback purposes</param>
 		public override void Execute(TextArea textArea)
 		{
+			if (textArea.SelectionManager.SelectionIsReadonly) {
+				return;
+			}
+			IndentHelper indentHelper = new IndentHelper(textArea.Document);
+			textArea.Document.UndoStack.StartUndoGroup();
+			
 			if (textArea.SelectionManager.HasSomethingSelected) {
 				foreach (ISelection selection in textArea.SelectionManager.SelectionCollection) {
 					int startLine = selection.StartPosition.Y;
 					int endLine   = selection.EndPosition.Y;
 					textArea.BeginUpdate();
-					RemoveTabs(textArea.Document, selection, startLine, endLine);
+					for (int lineNum = startLine; lineNum <= endLine; lineNum++) {
+						IndentOperationInfo info = indentHelper.UnIndentLine(lineNum);
+						if (lineNum == textArea.Caret.Position.Line) {
+							textArea.Caret.Position = info.AdjustTextLocation(textArea.Caret.Position);
+						}
+						if (lineNum == startLine) {
+							selection.StartPosition = info.AdjustTextLocation(selection.StartPosition);
+						}
+						if (lineNum == endLine) {
+							selection.EndPosition = info.AdjustTextLocation(selection.EndPosition);
+						}
+					}
 					textArea.Document.UpdateQueue.Clear();
 					textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.LinesBetween, startLine, endLine));
 					textArea.EndUpdate();
-					
 				}
 				textArea.AutoClearSelection = false;
 			} else {
-				// Pressing Shift-Tab with nothing selected the cursor will move back to the
-				// previous tab stop. It will stop at the beginning of the line. Also, the desired
-				// column is updated to that column.
-				LineSegment line = textArea.Document.GetLineSegmentForOffset(textArea.Caret.Offset);
-				string startOfLine = textArea.Document.GetText(line.Offset,textArea.Caret.Offset - line.Offset);
-				int tabIndent = textArea.Document.TextEditorProperties.IndentationSize;
-				int currentColumn = textArea.Caret.Column;
-				int remainder = currentColumn % tabIndent;
-				if (remainder == 0) {
-					textArea.Caret.DesiredColumn = Math.Max(0, currentColumn - tabIndent);
-				} else {
-					textArea.Caret.DesiredColumn = Math.Max(0, currentColumn - remainder);
-				}
-				textArea.SetCaretToDesiredColumn();
+				// Pressing Shift-Tab with nothing selected will un-indent the current line by one level.
+				int currentLine = textArea.Document.GetLineNumberForOffset(textArea.Caret.Offset);
+				IndentOperationInfo info = indentHelper.UnIndentLine(currentLine);
+				textArea.Caret.Position = info.AdjustTextLocation(textArea.Caret.Position);
+				textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.SingleLine, currentLine));
+				textArea.Document.CommitUpdate();
 			}
+			textArea.Document.UndoStack.EndUndoGroup();
 		}
 	}
 	
@@ -566,11 +469,21 @@ namespace ICSharpCode.TextEditor.Actions
 						textArea.Caret.Position = new TextLocation(lineLength, curLineNr - 1);
 						textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.PositionToEnd, new TextLocation(0, curLineNr - 1)));
 					} else {
-						int caretOffset = textArea.Caret.Offset - 1;
-						textArea.Caret.Position = textArea.Document.OffsetToPosition(caretOffset);
-						textArea.Document.Remove(caretOffset, 1);
+						string lineTextToCaret = textArea.Document.GetText(curLineOffset, textArea.Caret.Offset - curLineOffset);
+						TextLocation caretPos = textArea.Caret.Position;
+						if (lineTextToCaret.Trim() == "") {
+							// If we're inside of a line's leading whitespace, Backspace will decrease
+							// the line's indentation level.
+							IndentHelper indentHelper = new IndentHelper(textArea.Document);
+							caretPos = indentHelper.UnIndentLine(curLineNr).AdjustTextLocation(caretPos);
+						} else {
+							caretPos.Column--;
+							textArea.Document.Remove(textArea.Caret.Offset - 1, 1);
+						}
+						textArea.Caret.Position = caretPos;
 						
-						textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.PositionToLineEnd, new TextLocation(textArea.Caret.Offset - textArea.Document.GetLineSegment(curLineNr).Offset, curLineNr)));
+						textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.PositionToLineEnd,
+							new TextLocation(textArea.Caret.Offset - textArea.Document.GetLineSegment(curLineNr).Offset, curLineNr)));
 					}
 					textArea.EndUpdate();
 				}

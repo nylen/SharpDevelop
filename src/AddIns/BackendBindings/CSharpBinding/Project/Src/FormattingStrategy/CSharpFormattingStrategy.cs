@@ -14,8 +14,8 @@ using System.Text;
 using ICSharpCode.SharpDevelop;
 using ICSharpCode.SharpDevelop.Dom;
 using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace CSharpBinding.FormattingStrategy
 {
@@ -44,7 +44,7 @@ namespace CSharpBinding.FormattingStrategy
 			DocumentAccessor acc = new DocumentAccessor(textArea.Document, lineNr, lineNr);
 			
 			IndentationSettings set = new IndentationSettings();
-			set.IndentString = Tab.GetIndentationString(textArea.Document);
+			set.IndentString = IndentHelper.GetIndentationString(textArea.Document);
 			set.LeaveEmptyLines = false;
 			IndentationReformatter r = new IndentationReformatter();
 			
@@ -82,7 +82,7 @@ namespace CSharpBinding.FormattingStrategy
 				oldIndentLength = GetIndentation(textArea, cursorPos).Length;
 			
 			IndentationSettings set = new IndentationSettings();
-			set.IndentString = Tab.GetIndentationString(textArea.Document);
+			set.IndentString = IndentHelper.GetIndentationString(textArea.Document);
 			IndentationReformatter r = new IndentationReformatter();
 			DocumentAccessor acc = new DocumentAccessor(textArea.Document, begin, end);
 			r.Reformat(acc, set);

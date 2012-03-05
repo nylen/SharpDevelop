@@ -7,8 +7,8 @@
 
 using System;
 using ICSharpCode.TextEditor;
-using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 using System.Collections.Generic;
 
 namespace Grunwald.BooBinding
@@ -23,7 +23,7 @@ namespace Grunwald.BooBinding
 			if (document.GetText(previousLine).EndsWith(":")) {
 				LineSegment currentLine = document.GetLineSegment(line);
 				string indentation = GetIndentation(area, line-1);
-				indentation += Tab.GetIndentationString(document);
+				indentation += IndentHelper.GetIndentationString(document);
 				document.Replace(currentLine.Offset,
 				                 currentLine.Length,
 				                 indentation + document.GetText(currentLine));
