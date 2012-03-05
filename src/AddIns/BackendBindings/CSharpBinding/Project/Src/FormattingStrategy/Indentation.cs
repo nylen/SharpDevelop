@@ -268,6 +268,9 @@ namespace CSharpBinding.FormattingStrategy
 				switch (c) {
 					case '{':
 						block.ResetOneLineBlock();
+						if (block.StartLine == doc.LineNumber) {
+							block.InnerIndent = block.OuterIndent;
+						}
 						blocks.Push(block);
 						block.StartLine = doc.LineNumber;
 						if (block.LastWord == "switch") {
