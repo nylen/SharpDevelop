@@ -581,7 +581,7 @@ namespace ICSharpCode.TextEditor
 			editactions[Keys.D | Keys.Control]      = new DeleteLine();
 			editactions[Keys.D | Keys.Shift | Keys.Control]      = new DeleteToLineEnd();
 			
-			editactions[Keys.B | Keys.Control]      = new GotoMatchingBrace();
+			editactions[Keys.OemCloseBrackets | Keys.Control]    = new GotoMatchingBrace();
 		}
 		
 		/// <remarks>
