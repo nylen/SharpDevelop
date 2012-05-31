@@ -68,7 +68,7 @@ namespace ICSharpCode.SharpDevelop
 		
 		public virtual bool TryShowHelp(string fullTypeName)
 		{
-			FileService.OpenFile("http://msdn2.microsoft.com/library/" + Uri.EscapeDataString(fullTypeName));
+			FileService.OpenFile("http://msdn.microsoft.com/library/" + Uri.EscapeDataString(fullTypeName));
 			return true;
 		}
 		
