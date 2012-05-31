@@ -104,7 +104,7 @@ namespace ICSharpCode.SharpDevelop.Refactoring
 		protected override void Run(TextEditorControl textEditor, RefactoringProvider provider)
 		{
 			using (var pm = Gui.AsynchronousWaitDialog.ShowWaitDialog("${res:SharpDevelop.Refactoring.RemoveUnusedImports}")) {
-				NamespaceRefactoringService.ManageUsings(pm, textEditor.FileName, textEditor.Document, true, true);
+				NamespaceRefactoringService.ManageUsings(pm, textEditor.FileName, textEditor.Document, false, true);
 			}
 		}
 	}
