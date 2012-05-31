@@ -31,8 +31,11 @@ namespace ICSharpCode.TextEditor.Actions
 			
 			if (textArea.SelectionManager.HasSomethingSelected) {
 				foreach (ISelection selection in textArea.SelectionManager.SelectionCollection) {
-					int startLine = selection.StartPosition.Y;
-					int endLine   = selection.EndPosition.Y;
+					int startLine = selection.StartPosition.Line;
+					int endLine   = selection.EndPosition.Line;
+					if (selection.EndPosition.Column == 0) {
+					    endLine--;
+					}
 					textArea.BeginUpdate();
 					for (int lineNum = startLine; lineNum <= endLine; lineNum++) {
 						IndentOperationInfo info = indentHelper.IndentLine(lineNum);
@@ -79,8 +82,11 @@ namespace ICSharpCode.TextEditor.Actions
 			
 			if (textArea.SelectionManager.HasSomethingSelected) {
 				foreach (ISelection selection in textArea.SelectionManager.SelectionCollection) {
-					int startLine = selection.StartPosition.Y;
-					int endLine   = selection.EndPosition.Y;
+					int startLine = selection.StartPosition.Line;
+					int endLine   = selection.EndPosition.Line;
+					if (selection.EndPosition.Column == 0) {
+					    endLine--;
+					}
 					textArea.BeginUpdate();
 					for (int lineNum = startLine; lineNum <= endLine; lineNum++) {
 						IndentOperationInfo info = indentHelper.UnIndentLine(lineNum);

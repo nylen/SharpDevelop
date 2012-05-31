@@ -23,7 +23,9 @@ namespace ICSharpCode.TextEditor.Util {
             
             FirstNonSpaceOffset = LineOffset = line.Offset;
             char c;
-            while (IsIndentChar(c = document.GetCharAt(FirstNonSpaceOffset))) {
+            while (FirstNonSpaceOffset < document.TextLength
+                && IsIndentChar(c = document.GetCharAt(FirstNonSpaceOffset))) {
+                
                 FirstNonSpaceOffset++;
                 switch (c) {
                     case ' ':
