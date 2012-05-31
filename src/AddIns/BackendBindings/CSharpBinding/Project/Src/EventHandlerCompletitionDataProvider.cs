@@ -19,6 +19,7 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor.Gui.CompletionWindow;
+using ICSharpCode.TextEditor.Util;
 
 namespace CSharpBinding
 {
@@ -44,10 +45,6 @@ namespace CSharpBinding
 		{
 			List<ICompletionData> completionData = new List<ICompletionData>();
 			
-			// delegate {  }
-			completionData.Add(new DelegateCompletionData("delegate {  };", 3,
-			                                              "${res:CSharpBinding.InsertAnonymousMethod}"));
-
 			CSharpAmbience ambience = new CSharpAmbience();
 			// get eventHandler type name incl. type argument list
 			ambience.ConversionFlags = ConversionFlags.ShowParameterNames | ConversionFlags.ShowTypeParameterList | ConversionFlags.UseFullyQualifiedTypeNames;
@@ -70,12 +67,6 @@ namespace CSharpBinding
 					parameterString.Append(ambience.Convert(invoke.Parameters[i]));
 				}
 				
-				// delegate(object sender, EventArgs e) {  };
-				StringBuilder anonMethodWithParametersBuilder =
-					new StringBuilder("delegate(").Append(parameterString.ToString()).Append(") {  };");
-				completionData.Add(new DelegateCompletionData(anonMethodWithParametersBuilder.ToString(), 3,
-				                                              "${res:CSharpBinding.InsertAnonymousMethodWithParameters}"));
-
 				// new EventHandler(ClassName_EventName);
 				IClass callingClass = resolveResult.CallingClass;
 				bool inStatic = false;
@@ -103,8 +94,7 @@ namespace CSharpBinding
 				if (inStatic)
 					newHandlerCodeBuilder.Append("static ");
 				newHandlerCodeBuilder.Append(ambience.Convert(invoke.ReturnType)).Append(" ").Append(newHandlerName);
-				newHandlerCodeBuilder.Append("(").Append(parameterString.ToString()).AppendLine(")");
-				newHandlerCodeBuilder.AppendLine("{");
+				newHandlerCodeBuilder.Append("(").Append(parameterString.ToString()).AppendLine(") {");
 				newHandlerCodeBuilder.AppendLine("throw new NotImplementedException();");
 				newHandlerCodeBuilder.Append("}");
 
@@ -113,7 +103,7 @@ namespace CSharpBinding
 					newHandlerTextBuilder.ToString(),
 					2+newHandlerName.Length,
 					newHandlerName.Length,
-					"new " + eventHandlerFullyQualifiedTypeName + 
+					"new " + eventHandlerFullyQualifiedTypeName +
 					"(" + newHandlerName + StringParser.Parse(")\n${res:CSharpBinding.GenerateNewHandlerInstructions}\n")
 					+ CodeCompletionData.ConvertDocumentation(resolvedClass.Documentation),
 					resolveResult,
@@ -143,8 +133,29 @@ namespace CSharpBinding
 						}
 					}
 				}
+				
+				// delegate(object sender, EventArgs e) { };
+				completionData.Add(new DelegateCompletionData("delegate(" + parameterString.ToString() + ")",
+					textArea.Document,
+					"${res:CSharpBinding.InsertAnonymousMethodWithParameters}"));
 			}
-			return completionData.ToArray();
+			
+			// delegate { }
+			completionData.Add(new DelegateCompletionData("delegate",
+				textArea.Document,
+				"${res:CSharpBinding.InsertAnonymousMethod}"));
+			
+			var completionDataArray = completionData.ToArray();
+			Array.Sort<ICompletionData>(completionDataArray, DefaultCompletionData.Compare);
+			
+			for (int i = 0; i < completionDataArray.Length; i++) {
+				if (completionDataArray[i] is NewEventHandlerCompletionData) {
+					this.DefaultIndex = i;
+					break;
+				}
+			}
+			
+			return completionDataArray;
 		}
 		
 		string BuildHandlerName()
@@ -173,18 +184,24 @@ namespace CSharpBinding
 		
 		private class DelegateCompletionData : DefaultCompletionData
 		{
-			int cursorOffset;
-			
-			public DelegateCompletionData(string text, int cursorOffset, string documentation)
-				: base(text, StringParser.Parse(documentation), ClassBrowserIconService.DelegateIndex)
-			{
-				this.cursorOffset = cursorOffset;
-			}
+			public DelegateCompletionData(string text, IDocument document, string documentation)
+				: base(String.Format("{0} {{{1}{2}{1}}};",
+					text, Environment.NewLine, IndentHelper.GetIndentationString(document)),
+					StringParser.Parse(documentation), ClassBrowserIconService.DelegateIndex) { }
 			
 			public override bool InsertAction(TextArea textArea, char ch)
 			{
 				bool r = base.InsertAction(textArea, ch);
-				textArea.Caret.Column -= cursorOffset;
+				// The insertion point is right after the ending brace.
+				textArea.Document.FormattingStrategy.IndentLines(textArea,
+					textArea.Caret.Line - 2, textArea.Caret.Line);
+				// Move up a line.
+				textArea.Caret.Line -= 1;
+				// If using spaces for indentation, move forward (IndentationSize - 1) characters.
+				// If using tabs for indentation, we're already in the right place.
+				if (textArea.Document.TextEditorProperties.ConvertTabsToSpaces) {
+					textArea.Caret.Column += (textArea.Document.TextEditorProperties.IndentationSize - 1);
+				}
 				return r;
 			}
 		}
@@ -250,7 +267,14 @@ namespace CSharpBinding
 
 					textArea.Document.FormattingStrategy.IndentLines(textArea, region.EndLine, textArea.Caret.Line);
 					
+					// The insertion point is right after the ending brace.
+					// Move up a line.
 					textArea.Caret.Line -= 1;
+					// If using spaces for indentation, move forward (IndentationSize - 1) characters.
+					// If using tabs for indentation, we're already in the right place.
+					if (textArea.Document.TextEditorProperties.ConvertTabsToSpaces) {
+						textArea.Caret.Column += (textArea.Document.TextEditorProperties.IndentationSize - 1);
+					}
 
 					LineSegment segment = textArea.Document.GetLineSegment(textArea.Caret.Line);
 
