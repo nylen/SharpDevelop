@@ -6,6 +6,8 @@
 // </file>
 
 using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using ICSharpCode.Core;
 using ICSharpCode.SharpDevelop.Gui;
@@ -50,6 +52,28 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 			WorkbenchSingleton.Workbench.CloseAllViews();
 			if (WorkbenchSingleton.Workbench.WorkbenchWindowCollection.Count == 0) {
 				ProjectService.CloseSolution();
+			}
+			
+			foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies()) {
+			    if (Path.GetFileName(a.Location) == "StartPage.dll") {
+			        LoggingService.Debug("CloseSolution: found StartPage.dll");
+			        foreach (Type t in a.GetTypes()) {
+			            if (t.Name == "ShowStartPageCommand") {
+			                LoggingService.Debug("CloseSolution: found ShowStartPageCommand");
+			                ConstructorInfo ci = t.GetConstructor(
+			                    BindingFlags.Public | BindingFlags.Instance,
+			                    null, new Type[0], null);
+			                if (ci != null) {
+			                    LoggingService.Debug("CloseSolution: found default constructor");
+			                    var command = ci.Invoke(new object[0]) as AbstractMenuCommand;
+			                    if (command != null) {
+			                        LoggingService.Debug("CloseSolution: running ShowStartPageCommand");
+			                        command.Run();
+			                    }
+			                }
+			            }
+			        }
+			    }
 			}
 		}
 	}
