@@ -26,7 +26,7 @@ namespace ICSharpCode.FormsDesigner.Services
 
 		protected override string CreateUniqueMethodName(IComponent component, EventDescriptor e)
 		{
-			return String.Format("{0}{1}", Char.ToUpper(component.Site.Name[0]) + component.Site.Name.Substring(1), e.DisplayName);
+			return String.Format("{0}_{1}", component.Site.Name, e.DisplayName);
 		}
 
 		// sohuld look around in form class for compatiable methodes

@@ -38,21 +38,22 @@ namespace ICSharpCode.FormsDesigner
 			
 			StringBuilder b = new StringBuilder();
 			b.AppendLine(indentation);
-			b.AppendLine(indentation + "void " + eventMethodName + "(" + param + ")");
-			b.AppendLine(indentation + "{");
+			b.AppendLine(indentation + "void " + eventMethodName + "(" + param + ") {");
 			if (string.IsNullOrEmpty(body)) {
 				if (ICSharpCode.FormsDesigner.Gui.OptionPanels.GeneralOptionsPanel.InsertTodoComment) {
 					body = "// TODO: Implement " + eventMethodName;
 				}
 			}
-			b.AppendLine(indentation + "\t" + body);
+			b.AppendLine(indentation
+			    + SharpDevelop.DefaultEditor.Gui.Editor.SharpDevelopTextEditorProperties.Instance.IndentationString
+			    + body);
 			b.AppendLine(indentation + "}");
 			return b.ToString();
 		}
 		
 		protected override int GetCursorLineAfterEventHandlerCreation()
 		{
-			return 3;
+			return 2;
 		}
 		
 		protected override int GetCursorLine(IDocument document, IMethod method)
