@@ -29,11 +29,11 @@ namespace UpdateAssemblyInfo
 				Output = "src/Main/GlobalAssemblyInfo.cs"
 			},
 			new TemplateFile {
-				Input = "src/Main/StartUp/Project/app.template.config",
-				Output = "src/Main/StartUp/Project/SharpDevelop.exe.config"
+				Input = "src/Main/Start_Up/Project/app.template.config",
+				Output = "src/Main/Start_Up/Project/SharpDevelop.exe.config"
 			},
 			new TemplateFile {
-				Input = "src/Main/StartUp/Project/app.template.config",
+				Input = "src/Main/Start_Up/Project/app.template.config",
 				Output = "src/Main/ICSharpCode.SharpDevelop.Sda/ICSharpCode.SharpDevelop.Sda.dll.config"
 			},
 			new TemplateFile {
@@ -142,7 +142,7 @@ namespace UpdateAssemblyInfo
 			majorVersionNumber = "?";
 			fullVersionNumber = "?";
 			versionName = null;
-			// Get main version from startup
+			// Get main version from Start_Up
 			using (StreamReader r = new StreamReader(globalAssemblyInfoTemplateFile)) {
 				string line;
 				while ((line = r.ReadLine()) != null) {

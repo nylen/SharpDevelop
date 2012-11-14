@@ -126,10 +126,10 @@
 	</Path>
 	
 	<Path name="/AddIns/ResourceToolkit/ICSharpCodeCoreResourceResolver/HostResourcesLocations">
-		<String id="SharpDevelop" text="..\src\Main\StartUp\Project\Resources"/>
-		<String id="Alternative1" text="..\Startup\Project\Resources"/>
-		<String id="Alternative2" text="..\Startup\Resources"/>
-		<String id="ICSharpCodeCoreDemo" text="..\Startup"/>
+		<String id="SharpDevelop" text="..\src\Main\Start_Up\Project\Resources"/>
+		<String id="Alternative1" text="..\Start_Up\Project\Resources"/>
+		<String id="Alternative2" text="..\Start_Up\Resources"/>
+		<String id="ICSharpCodeCoreDemo" text="..\Start_Up"/>
 		<String id="SharpDevelop4" text="..\data\resources"/>
 	</Path>
 	
