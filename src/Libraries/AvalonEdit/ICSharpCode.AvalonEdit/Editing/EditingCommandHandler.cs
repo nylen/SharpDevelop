@@ -560,15 +560,21 @@ namespace ICSharpCode.AvalonEdit.Editing
 			TextArea textArea = GetTextArea(target);
 			if (textArea != null && textArea.Document != null) {
 				using (textArea.Document.RunUpdate()) {
-					int start, end;
+					int startIndex, endIndex;
 					if (textArea.Selection.IsEmpty) {
-						start = 1;
-						end = textArea.Document.LineCount;
+						startIndex = 1;
+						endIndex = textArea.Document.LineCount;
 					} else {
-						start = textArea.Document.GetLineByOffset(textArea.Selection.SurroundingSegment.Offset).LineNumber;
-						end = textArea.Document.GetLineByOffset(textArea.Selection.SurroundingSegment.EndOffset).LineNumber;
+						ISegment s = textArea.Selection.SurroundingSegment;
+						DocumentLine start = textArea.Document.GetLineByOffset(s.Offset);
+						DocumentLine end = textArea.Document.GetLineByOffset(s.EndOffset);
+						// don't include the last line if no characters on it are selected
+						if (start != end && end.Offset == s.EndOffset)
+							end = end.PreviousLine;
+						startIndex = start.LineNumber;
+						endIndex = end.LineNumber;
 					}
-					textArea.IndentationStrategy.IndentLines(textArea.Document, start, end);
+					textArea.IndentationStrategy.IndentLines(textArea.Document, startIndex, endIndex);
 				}
 				textArea.Caret.BringCaretToView();
 				args.Handled = true;
