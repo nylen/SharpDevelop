@@ -163,7 +163,8 @@ namespace ICSharpCode.SharpDevelop.Editor
 		/// <returns>The indentation text.</returns>
 		public static string GetWhitespaceBefore(ITextBuffer textBuffer, int offset)
 		{
-			ISegment segment = TextUtilities.GetWhitespaceBefore(GetTextSource(textBuffer), offset);
+			bool dummy;
+			ISegment segment = TextUtilities.GetWhitespaceBefore(GetTextSource(textBuffer), offset, out dummy);
 			return textBuffer.GetText(segment.Offset, segment.Length);
 		}
 		

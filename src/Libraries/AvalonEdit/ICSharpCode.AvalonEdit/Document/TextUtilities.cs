@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Documents;
+using ICSharpCode.AvalonEdit.Editing;
 
 namespace ICSharpCode.AvalonEdit.Document
 {
@@ -101,20 +102,29 @@ namespace ICSharpCode.AvalonEdit.Document
 		/// </summary>
 		/// <param name="textSource">The text source.</param>
 		/// <param name="offset">The offset where the whitespace ends.</param>
+		/// <param name="foundBeginningOfLine">Will be set to true if the current whitespace is at the beginning of a line.</param>
 		/// <returns>The segment containing the whitespace.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
 		                                                 Justification = "WPF uses 'Whitespace'")]
-		public static ISegment GetWhitespaceBefore(ITextSource textSource, int offset)
+		public static ISegment GetWhitespaceBefore(ITextSource textSource, int offset, out bool foundBeginningOfLine)
 		{
 			if (textSource == null)
 				throw new ArgumentNullException("textSource");
 			int pos;
+			foundBeginningOfLine = false;
 			for (pos = offset - 1; pos >= 0; pos--) {
 				char c = textSource.GetCharAt(pos);
-				if (c != ' ' && c != '\t')
+				if (c != ' ' && c != '\t') {
+					if (c == '\r' || c == '\n') {
+						foundBeginningOfLine = true;
+					}
 					break;
+				}
 			}
 			pos++; // go back the one character that isn't whitespace
+			if (pos == 0) {
+				foundBeginningOfLine = true;
+			}
 			return new SimpleSegment(pos, offset - pos);
 		}
 		
@@ -143,49 +153,67 @@ namespace ICSharpCode.AvalonEdit.Document
 		{
 			if (documentLine == null)
 				throw new ArgumentNullException("documentLine");
-			ISegment segment = GetWhitespaceBefore(document, documentLine.EndOffset);
+			bool foundBeginningOfLine;
+			ISegment segment = GetWhitespaceBefore(document, documentLine.EndOffset, out foundBeginningOfLine);
 			// If the whole line consists of whitespace, we consider all of it as leading whitespace,
 			// so return an empty segment as trailing whitespace.
-			if (segment.Offset == documentLine.Offset)
+			if (foundBeginningOfLine)
 				return new SimpleSegment(documentLine.EndOffset, 0);
 			else
 				return segment;
 		}
 		#endregion
 		
-		#region GetSingleIndentationSegment
+		#region Indentation
 		/// <summary>
-		/// Gets a single indentation segment starting at <paramref name="offset"/> - at most one tab
-		/// or <paramref name="indentationSize"/> spaces.
+		/// Stores information about the whitespace after the given offset in a document.
 		/// </summary>
-		/// <param name="textSource">The text source.</param>
-		/// <param name="offset">The offset where the indentation segment starts.</param>
-		/// <param name="indentationSize">The size of an indentation unit. See <see cref="TextEditorOptions.IndentationSize"/>.</param>
-		/// <returns>The indentation segment.
-		/// If there is no indentation character at the specified <paramref name="offset"/>,
-		/// an empty segment is returned.</returns>
-		public static ISegment GetSingleIndentationSegment(ITextSource textSource, int offset, int indentationSize)
+		public class IndentationInfo
 		{
-			if (textSource == null)
-				throw new ArgumentNullException("textSource");
-			int pos = offset;
-			while (pos < textSource.TextLength) {
-				char c = textSource.GetCharAt(pos);
-				if (c == '\t') {
-					if (pos == offset)
-						return new SimpleSegment(offset, 1);
-					else
+			/// <summary>
+			/// The beginning offset of the whitespace in the document.
+			/// </summary>
+			public int BeginOffset;
+			
+			/// <summary>
+			/// The ending offset of the whitespace in the document.
+			/// </summary>
+			public int EndOffset;
+			
+			/// <summary>
+			/// The visual width of a single indentation in the document.
+			/// </summary>
+			public int SingleIndentVisualWidth;
+			
+			/// <summary>
+			/// The visual width of the total indentation in this whitespace segment.
+			/// </summary>
+			public int TotalVisualWidth;
+			
+			/// <summary>
+			/// Initializes the object with information about the whitespace after the given offset in a document.
+			/// </summary>
+			/// <param name="textArea">The text area.</param>
+			/// <param name="line">The document line to analyze.</param>
+			public IndentationInfo(TextArea textArea, DocumentLine line)
+			{
+				SingleIndentVisualWidth = textArea.Options.IndentationSize;
+				TotalVisualWidth = 0;
+				
+				EndOffset = BeginOffset = line.Offset;
+				char c;
+				while (EndOffset < textArea.Document.TextLength) {
+					c = textArea.Document.GetCharAt(EndOffset);
+					if (c == ' ') {
+						TotalVisualWidth++;
+					} else if (c == '\t') {
+						TotalVisualWidth += (SingleIndentVisualWidth - (TotalVisualWidth % SingleIndentVisualWidth));
+					} else {
 						break;
-				} else if (c == ' ') {
-					if (pos - offset >= indentationSize)
-						break;
-				} else {
-					break;
+					}
+					EndOffset++;
 				}
-				// continue only if c==' ' and (pos-offset)<tabSize
-				pos++;
 			}
-			return new SimpleSegment(offset, pos - offset);
 		}
 		#endregion
 		

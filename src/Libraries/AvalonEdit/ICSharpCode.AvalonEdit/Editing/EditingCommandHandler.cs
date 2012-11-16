@@ -180,48 +180,67 @@ namespace ICSharpCode.AvalonEdit.Editing
 		#region Tab
 		static void OnTab(object target, ExecutedRoutedEventArgs args)
 		{
-			TextArea textArea = GetTextArea(target);
-			if (textArea != null && textArea.Document != null) {
-				using (textArea.Document.RunUpdate()) {
-					if (textArea.Selection.IsMultiline) {
-						var segment = textArea.Selection.SurroundingSegment;
-						DocumentLine start = textArea.Document.GetLineByOffset(segment.Offset);
-						DocumentLine end = textArea.Document.GetLineByOffset(segment.EndOffset);
-						// don't include the last line if no characters on it are selected
-						if (start != end && end.Offset == segment.EndOffset)
-							end = end.PreviousLine;
-						DocumentLine current = start;
-						while (true) {
-							int offset = current.Offset;
-							if (textArea.ReadOnlySectionProvider.CanInsert(offset))
-								textArea.Document.Replace(offset, 0, textArea.Options.IndentationString, OffsetChangeMappingType.KeepAnchorBeforeInsertion);
-							if (current == end)
-								break;
-							current = current.NextLine;
-						}
-					} else {
-						string indentationString = textArea.Options.GetIndentationString(textArea.Caret.Column);
-						textArea.ReplaceSelectionWithText(indentationString);
-					}
-				}
-				textArea.Caret.BringCaretToView();
-				args.Handled = true;
-			}
+			TransformSelectedLines(
+				delegate (TextArea textArea, DocumentLine line) {
+					IncreaseLineIndent(textArea, line);
+				}, target, args, DefaultSegmentType.CurrentLine);
 		}
 		
 		static void OnShiftTab(object target, ExecutedRoutedEventArgs args)
 		{
 			TransformSelectedLines(
 				delegate (TextArea textArea, DocumentLine line) {
-					int offset = line.Offset;
-					ISegment s = TextUtilities.GetSingleIndentationSegment(textArea.Document, offset, textArea.Options.IndentationSize);
-					if (s.Length > 0) {
-						s = textArea.GetDeletableSegments(s).FirstOrDefault();
-						if (s != null && s.Length > 0) {
-							textArea.Document.Remove(s.Offset, s.Length);
+					DecreaseLineIndent(textArea, line);
+				}, target, args, DefaultSegmentType.CurrentLine);
+		}
+		
+		static void IncreaseLineIndent(TextArea textArea, DocumentLine line)
+		{
+			var info = new TextUtilities.IndentationInfo(textArea, line);
+			if ((info.TotalVisualWidth % info.SingleIndentVisualWidth) != 0) {
+				// Remove partial indentation from the end of the line's whitespace.
+				info.EndOffset -= DecreaseLineIndent(textArea, line);
+			}
+			// Insert indentation string at the end of the line's whitespace.
+			if (textArea.ReadOnlySectionProvider.CanInsert(info.EndOffset)) {
+				textArea.Document.Replace(info.EndOffset, 0,
+					textArea.Options.IndentationString, OffsetChangeMappingType.Normal);
+			}
+		}
+		
+		static int DecreaseLineIndent(TextArea textArea, DocumentLine line)
+		{
+			var info = new TextUtilities.IndentationInfo(textArea, line);
+			if (line.Length > 0 && info.TotalVisualWidth > 0) {
+				int beginRemoveOffset = info.EndOffset;
+				if ((info.TotalVisualWidth % info.SingleIndentVisualWidth) == 0) {
+					/* Remove a full indentation level from the end of the line's leading whitespace.
+					 * This could be any of the following:
+					 *  - One tab + (n < SingleIndentVisualWidth) spaces
+					 *  - One tab
+					 *  - SingleIndentVisualWidth spaces
+					 */
+					while (info.EndOffset - beginRemoveOffset < info.SingleIndentVisualWidth) {
+						beginRemoveOffset--;
+						if (textArea.Document.GetCharAt(beginRemoveOffset) == '\t') {
+							break;
 						}
 					}
-				}, target, args, DefaultSegmentType.CurrentLine);
+				} else {
+					// The current line is indented "in between" indentation levels, which means we
+					// just need to remove (TotalVisualWidth % SingleIndentVisualWidth) spaces.
+					beginRemoveOffset -= (info.TotalVisualWidth % info.SingleIndentVisualWidth);
+				}
+				if (beginRemoveOffset < info.EndOffset) {
+					ISegment segment = new SimpleSegment(beginRemoveOffset, info.EndOffset - beginRemoveOffset);
+					segment = textArea.GetDeletableSegments(segment).FirstOrDefault();
+					if (segment != null && segment.Length > 0) {
+						textArea.Document.Remove(segment.Offset, segment.Length);
+						return segment.Length;
+					}
+				}
+			}
+			return 0;
 		}
 		#endregion
 		
@@ -231,6 +250,21 @@ namespace ICSharpCode.AvalonEdit.Editing
 			return (target, args) => {
 				TextArea textArea = GetTextArea(target);
 				if (textArea != null && textArea.Document != null) {
+					// If we're inside a line's leading whitespace, make Backspace decrease the indent level.
+					if (textArea.Selection.IsEmpty && selectingCommand == EditingCommands.SelectLeftByCharacter) {
+						bool foundBeginningOfLine;
+						ISegment whitespaceBefore = TextUtilities.GetWhitespaceBefore(textArea.Document,
+							textArea.Caret.Offset, out foundBeginningOfLine);
+						if (foundBeginningOfLine && whitespaceBefore.Length > 0) {
+							if (TextUtilities.GetWhitespaceAfter(textArea.Document, textArea.Caret.Offset).Length == 0) {
+								TransformSelectedLines(
+									delegate (TextArea textArea2, DocumentLine line) {
+										DecreaseLineIndent(textArea2, line);
+									}, target, args, DefaultSegmentType.CurrentLine);
+								return;
+							}
+						}
+					}
 					// call BeginUpdate before running the 'selectingCommand'
 					// so that undoing the delete does not select the deleted character
 					using (textArea.Document.RunUpdate()) {
