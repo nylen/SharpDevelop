@@ -307,7 +307,7 @@ namespace ICSharpCode.AvalonEdit.Indentation.CSharp
 							block.StartLine = doc.LineNumber;
 						block.Indent(Repeat(set.IndentString, oldBlock.OneLineBlock) +
 						             (oldBlock.Continuation ? set.IndentString : "") +
-						             (i == line.Length - 1 ? set.IndentString : new String(' ', i + 1)));
+						             set.IndentString);
 						block.Bracket = c;
 						break;
 					case ')':
