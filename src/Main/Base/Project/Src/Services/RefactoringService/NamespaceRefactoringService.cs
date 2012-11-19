@@ -64,30 +64,7 @@ namespace ICSharpCode.SharpDevelop.Refactoring
 				}
 			}
 			
-			// put empty line after last System namespace
-			if (sort) {
-				PutEmptyLineAfterLastSystemNamespace(newUsings);
-			}
-			
 			cu.ProjectContent.Language.CodeGenerator.ReplaceUsings(new RefactoringDocumentAdapter(document), cu.UsingScope.Usings, newUsings);
-		}
-		
-		static void PutEmptyLineAfterLastSystemNamespace(List<IUsing> newUsings)
-		{
-			if (newUsings.Count > 1 && newUsings[0].Usings.Count > 0) {
-				bool inSystem = IsSystemNamespace(newUsings[0].Usings[0]);
-				int inSystemCount = 1;
-				for (int i = 1; inSystem && i < newUsings.Count; i++) {
-					inSystem = newUsings[i].Usings.Count > 0 && IsSystemNamespace(newUsings[i].Usings[0]);
-					if (inSystem) {
-						inSystemCount++;
-					} else {
-						if (inSystemCount > 2) { // only use empty line when there are more than 2 system namespaces
-							newUsings.Insert(i, null);
-						}
-					}
-				}
-			}
 		}
 		
 		public static void AddUsingDeclaration(ICompilationUnit cu, IDocument document, string newNamespace, bool sortExistingUsings)
@@ -120,9 +97,6 @@ namespace ICSharpCode.SharpDevelop.Refactoring
 			}
 			if (!inserted) {
 				newUsings.Add(newUsingDecl);
-			}
-			if (sortExistingUsings) {
-				PutEmptyLineAfterLastSystemNamespace(newUsings);
 			}
 			cu.ProjectContent.Language.CodeGenerator.ReplaceUsings(new RefactoringDocumentAdapter(document), cu.UsingScope.Usings, newUsings);
 		}
