@@ -43,6 +43,15 @@ namespace ICSharpCode.SharpDevelop.Project.Commands
 				ProjectService.SaveSolutionPreferences();
 				if (WorkbenchSingleton.Workbench.CloseAllSolutionViews()) {
 					ProjectService.CloseSolution();
+					
+					var commands = AddInTree.BuildItems<ICommand>("/Workspace/AutostartNothingLoaded", null, false);
+					foreach (ICommand command in commands) {
+						try {
+							command.Run();
+						} catch (Exception ex) {
+							MessageService.ShowException(ex);
+						}
+					}
 				}
 			}
 		}
