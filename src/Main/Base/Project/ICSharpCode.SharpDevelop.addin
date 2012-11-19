@@ -1951,6 +1951,7 @@
 		          class = "ICSharpCode.SharpDevelop.Refactoring.RenameLocalVariableCommand"/>
 		<MenuItem id = "FindReferences"
 		          label = "${res:SharpDevelop.Refactoring.FindReferencesCommand}"
+		          shortcut = "F12"
 		          class = "ICSharpCode.SharpDevelop.Refactoring.FindLocalVariableReferencesCommand"/>
 	</Path>
 	
