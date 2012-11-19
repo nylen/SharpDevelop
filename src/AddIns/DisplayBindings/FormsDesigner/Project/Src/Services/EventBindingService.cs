@@ -29,7 +29,11 @@ namespace ICSharpCode.FormsDesigner.Services
 		string GetComponentName(IComponent component)
 		{
 			string siteName = component.Site.Name;
-			return Char.ToUpper(siteName[0]) + siteName.Substring(1);
+			if (GeneralOptionsPanel.GenerateVisualStudioStyleEventHandlers) {
+				return siteName;
+			} else {
+				return Char.ToUpper(siteName[0]) + siteName.Substring(1);
+			}
 		}
 		
 		string GetEventHandlerName(string componentName, string eventName)
