@@ -34,7 +34,7 @@ namespace CSharpBinding
 			result.InsertSpace = true;
 			
 			// delegate {  }
-			result.Items.Add(new DelegateCompletionItem("delegate {  };", 3,
+			result.Items.Add(new DelegateCompletionItem("delegate", editor,
 			                                           "${res:CSharpBinding.InsertAnonymousMethod}"));
 
 			CSharpAmbience ambience = new CSharpAmbience();
@@ -60,9 +60,7 @@ namespace CSharpBinding
 				}
 				
 				// delegate(object sender, EventArgs e) {  };
-				StringBuilder anonMethodWithParametersBuilder =
-					new StringBuilder("delegate(").Append(parameterString.ToString()).Append(") {  };");
-				result.Items.Add(new DelegateCompletionItem(anonMethodWithParametersBuilder.ToString(), 3,
+				result.Items.Add(new DelegateCompletionItem("delegate(" + parameterString.ToString() + ")", editor,
 				                                            "${res:CSharpBinding.InsertAnonymousMethodWithParameters}"));
 
 				// new EventHandler(ClassName_EventName);
@@ -92,22 +90,23 @@ namespace CSharpBinding
 				if (inStatic)
 					newHandlerCodeBuilder.Append("static ");
 				newHandlerCodeBuilder.Append(ambience.Convert(invoke.ReturnType)).Append(" ").Append(newHandlerName);
-				newHandlerCodeBuilder.Append("(").Append(parameterString.ToString()).AppendLine(")");
-				newHandlerCodeBuilder.AppendLine("{");
+				newHandlerCodeBuilder.Append("(").Append(parameterString.ToString()).AppendLine(") {");
 				newHandlerCodeBuilder.AppendLine("throw new NotImplementedException();");
 				newHandlerCodeBuilder.Append("}");
 
 				// ...and add it to the completionData.
-				result.Items.Add(new NewEventHandlerCompletionItem(
+				var newHandlerItem = new NewEventHandlerCompletionItem(
 					newHandlerTextBuilder.ToString(),
 					2+newHandlerName.Length,
 					newHandlerName.Length,
-					"new " + eventHandlerFullyQualifiedTypeName + 
+					"new " + eventHandlerFullyQualifiedTypeName +
 					"(" + newHandlerName + StringParser.Parse(")\n${res:CSharpBinding.GenerateNewHandlerInstructions}\n")
 					+ CodeCompletionItem.ConvertDocumentation(resolvedClass.Documentation),
 					resolveResult,
 					newHandlerCodeBuilder.ToString()
-				));
+				);
+				result.Items.Add(newHandlerItem);
+				result.SuggestedItem = newHandlerItem;
 				
 				if (callingClass != null) {
 					foreach (IMethod method in callingClass.DefaultReturnType.GetMethods()) {
@@ -163,20 +162,32 @@ namespace CSharpBinding
 		
 		sealed class DelegateCompletionItem : DefaultCompletionItem
 		{
-			int cursorOffset;
+			string actualCompletionText;
 			
-			public DelegateCompletionItem(string text, int cursorOffset, string documentation)
-				: base(text)
+			public DelegateCompletionItem(string text, ITextEditor editor, string documentation)
+				: base(text + " { };")
 			{
-				this.cursorOffset = cursorOffset;
+				this.actualCompletionText = String.Format("{0} {{{1}{2}{1}}};",
+					text, Environment.NewLine, editor.Options.IndentationString);
 				this.Description = StringParser.Parse(documentation);
 				this.Image = ClassBrowserIconService.Delegate;
 			}
 			
 			public override void Complete(CompletionContext context)
 			{
-				base.Complete(context);
-				context.Editor.Caret.Column -= cursorOffset;
+				context.Editor.Document.Replace(context.StartOffset, context.Length, this.actualCompletionText);
+				context.EndOffset = context.StartOffset + this.actualCompletionText.Length;
+				// The caret is right after the ending semicolon.
+				context.Editor.Language.FormattingStrategy.IndentLines(
+					context.Editor,
+					context.Editor.Caret.Line - 2, context.Editor.Caret.Line);
+				// Move up a line.
+				context.Editor.Caret.Line -= 1;
+				// If using spaces for indentation, move forward (IndentationSize - 2) characters.
+				// If using tabs for indentation, we're already in the right place.
+				if (context.Editor.Options.ConvertTabsToSpaces) {
+					context.Editor.Caret.Column += (context.Editor.Options.IndentationSize - 2);
+				}
 			}
 		}
 		
