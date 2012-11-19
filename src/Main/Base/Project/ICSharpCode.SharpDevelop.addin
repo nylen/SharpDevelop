@@ -1535,7 +1535,7 @@
 				<MenuItem id    = "Rename"
 				          label = "${res:SharpDevelop.Refactoring.RenameCommand}"
 				          class = "ICSharpCode.SharpDevelop.Refactoring.RenameCommand"
-				          shortcut = "Control|R" />
+				          shortcut = "F2" />
 				<Condition name="RefactoringProviderSupports" supports="FindUnusedUsingDeclarations">
 					<MenuItem id    = "RemoveUnusedUsings"
 					          label = "${res:SharpDevelop.Refactoring.RemoveUnusedImports}"
@@ -1947,6 +1947,7 @@
 	<Path name = "/SharpDevelop/ViewContent/DefaultTextEditor/Refactoring/Common">
 		<MenuItem id = "Rename"
 		          label = "${res:SharpDevelop.Refactoring.RenameCommand}"
+		          shortcut = "F2"
 		          class = "ICSharpCode.SharpDevelop.Refactoring.RenameLocalVariableCommand"/>
 		<MenuItem id = "FindReferences"
 		          label = "${res:SharpDevelop.Refactoring.FindReferencesCommand}"

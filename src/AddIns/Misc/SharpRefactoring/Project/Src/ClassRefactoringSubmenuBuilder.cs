@@ -62,7 +62,7 @@ namespace SharpRefactoring
 		void AddRenameCommand(IClass c, List<ToolStripItem> resultItems)
 		{
 			var cmd = new MenuCommand("${res:SharpDevelop.Refactoring.RenameCommand}", Rename);
-			cmd.ShortcutKeys = MenuCommand.ParseShortcut("Control|R");
+			cmd.ShortcutKeys = MenuCommand.ParseShortcut("F2");
 			cmd.Tag = c;
 			resultItems.Add(cmd);
 		}

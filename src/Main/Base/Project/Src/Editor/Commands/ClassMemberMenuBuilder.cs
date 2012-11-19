@@ -53,7 +53,7 @@ namespace ICSharpCode.SharpDevelop.Editor.Commands
 				if (!FindReferencesAndRenameHelper.IsReadOnly(member.DeclaringType) &&
 				    !(member is IProperty && ((IProperty)member).IsIndexer)) {
 					cmd = new MenuCommand("${res:SharpDevelop.Refactoring.RenameCommand}", Rename);
-					cmd.ShortcutKeys = Keys.Control | Keys.R;
+					cmd.ShortcutKeys = Keys.F2;
 					cmd.Tag = member;
 					list.Add(cmd);
 				}
