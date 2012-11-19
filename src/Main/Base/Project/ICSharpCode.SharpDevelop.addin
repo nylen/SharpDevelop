@@ -1796,7 +1796,7 @@
 			
 			<MenuItem id = "GotoBrace"
 			          label = "${res:XML.MainMenu.SearchMenu.GotoBrace}"
-			          shortcut = "Control|B"
+			          shortcut = "Control|OemCloseBrackets"
 			          class = "ICSharpCode.SharpDevelop.Editor.Commands.GoToMatchingBrace"/>
 			<!--			</Condition> -->
 		</MenuItem>
