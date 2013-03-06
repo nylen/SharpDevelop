@@ -254,11 +254,19 @@ namespace ICSharpCode.SharpDevelop.Internal.Templates
 					}
 				case "RunCommand":
 					if (el.HasAttribute("path")) {
-						ICommand command = (ICommand)AddInTree.BuildItem(el.GetAttribute("path"), null);
-						return projectCreateInformation => {
-							command.Owner = projectCreateInformation;
-							command.Run();
-						};
+						try {
+							ICommand command = (ICommand)AddInTree.BuildItem(el.GetAttribute("path"), null);
+							return projectCreateInformation => {
+								command.Owner = projectCreateInformation;
+								command.Run();
+							};
+						} catch (Exception ex) {
+							LoggingService.WarnFormatted("Failed to read template action '{0}' in file '{1}': {2}",
+							                             el.GetAttribute("path"),
+							                             el.OwnerDocument.DocumentElement.GetAttribute("fileName"),
+							                             ex.Message);
+							return null;
+						}
 					} else {
 						WarnAttributeMissing(el, "path");
 						return null;
