@@ -162,6 +162,11 @@ namespace ICSharpCode.UsageDataCollector
 				// ignore error (maybe currently not connected to network)
 			} catch (TimeoutException) {
 				// ignore error (network connection trouble?)
+			} catch (Exception) {
+			    // ignore any other errors
+			    // example: Error on server, leading to:
+			    //   CallBackException: Async Callback threw an exception.
+			    //   ---> System.Net.InternalException: System error.
 			}
 			client.Close();
 			
